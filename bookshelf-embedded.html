@@ -21,6 +21,282 @@
         display: none; /* Hidden in embed version */
     }
 
+    .ibs-metrics-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #666;
+        text-align: center;
+        margin-bottom: 24px;
+    }
+
+    .ibs-metrics-section {
+        max-width: 1200px;
+        margin: 0 auto 48px;
+        background: white;
+        padding: 32px;
+        position: relative;
+    }
+
+    .ibs-metrics-section::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image:
+            repeating-linear-gradient(0deg, transparent, transparent 1px, rgba(0,0,0,0.02) 1px, rgba(0,0,0,0.02) 2px),
+            repeating-linear-gradient(90deg, transparent, transparent 1px, rgba(0,0,0,0.02) 1px, rgba(0,0,0,0.02) 2px);
+        pointer-events: none;
+        opacity: 0.5;
+    }
+
+    .ibs-metrics-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 32px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .ibs-metric-card {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .ibs-metric-label {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #666;
+    }
+
+    .ibs-metric-value {
+        font-size: 3rem;
+        font-weight: 900;
+        line-height: 1;
+        color: #1a1a1a;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .ibs-chart-container {
+        grid-column: 1 / -1;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        margin-top: 16px;
+    }
+
+    .ibs-chart {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+    }
+
+    .ibs-chart-title {
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #666;
+    }
+
+    .ibs-bar-chart {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+        height: 200px;
+        padding-bottom: 60px;
+        position: relative;
+    }
+
+    .ibs-bar-wrapper {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+        position: relative;
+        justify-content: flex-end;
+    }
+
+    .ibs-bar {
+        width: 100%;
+        background: #1a1a1a;
+        position: relative;
+        transition: all 0.3s ease;
+        min-height: 2px;
+    }
+
+    .ibs-bar::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image:
+            repeating-linear-gradient(45deg, transparent, transparent 2px, rgba(255,255,255,0.1) 2px, rgba(255,255,255,0.1) 4px);
+    }
+
+    .ibs-bar-label {
+        position: absolute;
+        bottom: -50px;
+        left: 50%;
+        transform: translateX(-50%) rotate(-45deg);
+        transform-origin: center;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        white-space: nowrap;
+        text-align: left;
+    }
+
+    .ibs-bar-count {
+        position: absolute;
+        top: -20px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: #1a1a1a;
+    }
+
+    .ibs-extremes-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 64px;
+        margin-top: 32px;
+        align-items: center;
+        justify-items: center;
+    }
+
+    .ibs-extreme-book {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+    }
+
+    .ibs-isometric-book {
+        position: relative;
+        width: 220px;
+        height: 220px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ibs-book-spine-iso {
+        position: relative;
+    }
+
+    /* Top panel - black cover */
+    .ibs-isometric-cube-top {
+        width: 180px;
+        height: 130px;
+        background: #1a1a1a;
+        transform-origin: 0 0;
+        box-shadow: 8px 6px 0px 5px #000;
+        transform: rotate(210deg) skewX(-30deg) scaleY(0.864);
+        z-index: 99;
+    }
+
+    /* Right panel - white pages with texture */
+    .ibs-isometric-cube-right {
+        position: absolute;
+        height: var(--page-height, 130px);
+        width: 130px;
+        background:
+            repeating-linear-gradient(
+                0deg,
+                #f9f9f9 0px,
+                #f5f5f5 1px,
+                #f0f0f0 2px,
+                #f5f5f5 3px
+            ),
+            #fff;
+        transform-origin: 0 0;
+        box-shadow: 4px -2px 0px 2px #000;
+        border-bottom: 10px solid #000;
+        transform: rotate(-30deg) skewX(-30deg) translate(0, -113px) scaleY(0.864);
+        z-index: 98;
+    }
+
+    /* Left panel - white pages with texture */
+    .ibs-isometric-cube-left {
+        position: absolute;
+        width: var(--page-height, 130px);
+        height: 180px;
+        transform-origin: 0 0;
+        background:
+            repeating-linear-gradient(
+                90deg,
+                #f9f9f9 0px,
+                #f5f5f5 1px,
+                #f0f0f0 2px,
+                #f5f5f5 3px
+            ),
+            #fff;
+        border-right: 10px solid #000;
+        transform: rotate(90deg) skewX(-30deg) scaleY(0.864) translate(-130.5px, 0);
+        z-index: 97;
+    }
+
+
+    .ibs-extreme-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #666;
+        text-align: center;
+    }
+
+    .ibs-extreme-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #1a1a1a;
+        text-align: center;
+    }
+
+    .ibs-extreme-meta {
+        font-size: 0.75rem;
+        color: #666;
+        text-align: center;
+    }
+
+    .ibs-recommended-list {
+        margin-top: 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .ibs-recommended-item {
+        padding: 12px 16px;
+        background: rgba(0,0,0,0.02);
+        border-left: 3px solid #1a1a1a;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .ibs-recommended-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #1a1a1a;
+    }
+
+    .ibs-recommended-author {
+        font-size: 0.8rem;
+        color: #666;
+    }
+
     .ibs-loading {
         text-align: center;
         padding: 60px 20px;
@@ -69,17 +345,40 @@
     }
 
     .ibs-book-cover-thumb {
+        height: 100%;
         width: auto;
         object-fit: cover;
-        border-radius: 2px 0 0 2px;
+        border-radius: 2px;
         flex-shrink: 0;
-        box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        margin: 4px;
+    }
+
+    .ibs-book-cover-placeholder {
+        height: 100%;
+        width: auto;
+        aspect-ratio: 2/3;
+        background: #e5e5e5;
+        border-radius: 2px;
+        flex-shrink: 0;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        margin: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-align: center;
+        color: #999;
+        line-height: 1.2;
+        overflow: hidden;
     }
 
     .ibs-book-spine {
         flex: 1;
         min-height: 60px;
-        padding: 12px 20px;
+        padding: 12px 20px 12px 8px;
         border-radius: 0;
         border: 1px solid rgba(0,0,0,0.08);
         font-size: 1rem;
@@ -92,6 +391,23 @@
         align-items: center;
         justify-content: space-between;
         gap: 12px;
+    }
+
+    .ibs-book-spine::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(255, 255, 255, 0.75);
+        pointer-events: none;
+        z-index: 0;
+    }
+
+    .ibs-book-spine > * {
+        position: relative;
+        z-index: 1;
     }
 
     .ibs-book-content {
@@ -180,6 +496,7 @@
         padding: 40px;
         background: linear-gradient(135deg, #d4a574 0%, #c49563 100%);
         color: white;
+        text-align: center;
     }
 
     .ibs-modal-header h2 {
@@ -225,13 +542,18 @@
         display: grid;
         grid-template-columns: 200px 1fr;
         gap: 40px;
-        margin-bottom: 30px;
     }
 
     .ibs-book-cover-large {
         width: 100%;
         border-radius: 8px;
         box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .ibs-book-info-column {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
     }
 
     .ibs-book-meta {
@@ -278,19 +600,22 @@
     .ibs-book-thoughts {
         margin-top: 30px;
         padding-top: 30px;
-        border-top: 2px solid #e0d5c7;
+        border-top: 1px solid #e0e0e0;
     }
 
     .ibs-thoughts-title {
-        font-size: 1.3rem;
-        margin-bottom: 15px;
-        color: #2c1810;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #6b5d54;
+        font-weight: 600;
+        margin-bottom: 10px;
     }
 
     .ibs-thoughts-content {
-        line-height: 1.8;
-        font-size: 1.1rem;
-        color: #6b5d54;
+        line-height: 1.6;
+        font-size: 1rem;
+        color: #2c1810;
     }
 
     @media (max-width: 768px) {
@@ -302,6 +627,23 @@
         }
         .ibs-modal-header, .ibs-modal-body {
             padding: 30px 20px;
+        }
+        .ibs-book-cover-large {
+            max-width: 200px;
+            margin: 0 auto;
+        }
+        .ibs-chart-container {
+            grid-template-columns: 1fr;
+        }
+        .ibs-metrics-section {
+            padding: 24px 16px;
+        }
+        .ibs-metric-value {
+            font-size: 2.5rem;
+        }
+        .ibs-extremes-grid {
+            grid-template-columns: 1fr;
+            gap: 32px;
         }
     }
 </style>
@@ -339,6 +681,7 @@
         async init() {
             this.renderSkeleton();
             await this.loadBooks();
+            this.renderMetrics();
             this.applyFilters(); // Apply hardcoded filters from CONFIG
             this.setupEventListeners();
             this.renderBookshelf();
@@ -347,6 +690,8 @@
         renderSkeleton() {
             this.root.innerHTML = `
                 <div class="ibs-container">
+                    <div class="ibs-metrics-title">Reading in Review</div>
+                    <div id="ibs-metrics" class="ibs-metrics-section"></div>
                     <div id="ibs-bookshelf" class="ibs-loading">Loading your bookshelf...</div>
                 </div>
                 <div class="ibs-modal" id="ibs-modal">
@@ -389,7 +734,7 @@
                     recommended: values[0]?.toLowerCase() === 'yes' || values[0]?.toLowerCase() === 'y' || values[0]?.includes('⭐') || values[0]?.includes('*'),
                     title: values[1],
                     author: values[2] || 'Unknown Author',
-                    publishedYear: values[3] || '',
+                    publishedYear: parseInt(values[3]) || null,
                     type: values[4] || '',
                     yearRead: values[5] || '',
                     genre: values[6] || 'Uncategorized',
@@ -496,7 +841,7 @@
                 hash = text.charCodeAt(i) + ((hash << 5) - hash);
             }
 
-            // Generate muted grey/beige tones
+            // Generate muted grey/beige tones for fallback
             const baseHues = [0, 30, 40, 200, 210, 220]; // Beiges, warm greys, cool greys
             const hue = baseHues[Math.abs(hash) % baseHues.length];
             const saturation = 3 + (Math.abs(hash) % 8); // Very low saturation (3-10%)
@@ -504,6 +849,95 @@
 
             const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
             return color;
+        }
+
+        async extractDominantColors(imageUrl) {
+            return new Promise((resolve) => {
+                const img = new Image();
+                img.crossOrigin = 'Anonymous';
+
+                img.onload = () => {
+                    try {
+                        const canvas = document.createElement('canvas');
+                        const ctx = canvas.getContext('2d');
+
+                        // Use small canvas for performance
+                        canvas.width = 100;
+                        canvas.height = 150;
+                        ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+                        const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                        const pixels = imageData.data;
+
+                        // Color clustering - find dominant colors
+                        const colorCounts = {};
+                        for (let i = 0; i < pixels.length; i += 4 * 10) { // Sample every 10th pixel
+                            const r = Math.round(pixels[i] / 20) * 20;
+                            const g = Math.round(pixels[i + 1] / 20) * 20;
+                            const b = Math.round(pixels[i + 2] / 20) * 20;
+
+                            // Skip very light and very dark colors
+                            const brightness = (r + g + b) / 3;
+                            if (brightness < 30 || brightness > 225) continue;
+
+                            const key = `${r},${g},${b}`;
+                            colorCounts[key] = (colorCounts[key] || 0) + 1;
+                        }
+
+                        // Get top 2 colors
+                        const sortedColors = Object.entries(colorCounts)
+                            .sort((a, b) => b[1] - a[1])
+                            .slice(0, 2)
+                            .map(([rgb]) => {
+                                const [r, g, b] = rgb.split(',').map(Number);
+                                return this.rgbToHsl(r, g, b);
+                            });
+
+                        if (sortedColors.length >= 2) {
+                            // Set saturation to 80%
+                            const color1 = `hsl(${sortedColors[0].h}, 80%, ${sortedColors[0].l}%)`;
+                            const color2 = `hsl(${sortedColors[1].h}, 80%, ${sortedColors[1].l}%)`;
+                            resolve(`linear-gradient(135deg, ${color1}, ${color2})`);
+                        } else {
+                            resolve(null);
+                        }
+                    } catch (e) {
+                        resolve(null);
+                    }
+                };
+
+                img.onerror = () => resolve(null);
+                img.src = imageUrl;
+            });
+        }
+
+        rgbToHsl(r, g, b) {
+            r /= 255;
+            g /= 255;
+            b /= 255;
+
+            const max = Math.max(r, g, b);
+            const min = Math.min(r, g, b);
+            let h, s, l = (max + min) / 2;
+
+            if (max === min) {
+                h = s = 0;
+            } else {
+                const d = max - min;
+                s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+
+                switch (max) {
+                    case r: h = ((g - b) / d + (g < b ? 6 : 0)) / 6; break;
+                    case g: h = ((b - r) / d + 2) / 6; break;
+                    case b: h = ((r - g) / d + 4) / 6; break;
+                }
+            }
+
+            return {
+                h: Math.round(h * 360),
+                s: Math.round(s * 100),
+                l: Math.round(l * 100)
+            };
         }
 
         setupEventListeners() {
@@ -527,6 +961,163 @@
             });
 
             this.renderBookshelf();
+        }
+
+        renderMetrics() {
+            const totalBooks = this.books.length;
+            const totalPages = this.books.reduce((sum, book) => sum + (book.pageCount || 0), 0);
+            const avgPages = totalBooks > 0 ? Math.round(totalPages / totalBooks) : 0;
+
+            // Calculate average publication age
+            const currentYear = new Date().getFullYear();
+            const booksWithYear = this.books.filter(b => b.publishedYear && !isNaN(b.publishedYear));
+            const avgAge = booksWithYear.length > 0
+                ? Math.round(booksWithYear.reduce((sum, book) => sum + (currentYear - book.publishedYear), 0) / booksWithYear.length)
+                : 0;
+
+            // Recommended rate
+            const recommendedCount = this.books.filter(b => b.recommended).length;
+            const recommendedRate = totalBooks > 0 ? Math.round((recommendedCount / totalBooks) * 100) : 0;
+
+            // Find extremes
+            const booksWithPages = this.books.filter(b => b.pageCount > 0);
+            const longest = booksWithPages.length > 0
+                ? booksWithPages.reduce((max, book) => book.pageCount > max.pageCount ? book : max)
+                : null;
+            const shortest = booksWithPages.length > 0
+                ? booksWithPages.reduce((min, book) => book.pageCount < min.pageCount ? book : min)
+                : null;
+
+            // Get recommended books
+            const recommendedBooks = this.books.filter(b => b.recommended);
+
+            // Count genres
+            const genreCounts = {};
+            this.books.forEach(book => {
+                const genre = book.genre || 'Uncategorized';
+                genreCounts[genre] = (genreCounts[genre] || 0) + 1;
+            });
+
+            // Sort genres by count and take top 8
+            const topGenres = Object.entries(genreCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 8);
+
+            // Count by decade
+            const decadeCounts = {};
+            this.books.forEach(book => {
+                if (book.publishedYear) {
+                    const decade = Math.floor(book.publishedYear / 10) * 10;
+                    decadeCounts[decade] = (decadeCounts[decade] || 0) + 1;
+                }
+            });
+
+            // Sort decades
+            const decades = Object.entries(decadeCounts)
+                .sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+
+            const metricsContainer = this.root.querySelector('#ibs-metrics');
+            const maxGenreCount = Math.max(...topGenres.map(g => g[1]));
+            const maxDecadeCount = Math.max(...decades.map(d => d[1]));
+
+            metricsContainer.innerHTML = `
+                <div class="ibs-metrics-grid">
+                    <div class="ibs-metric-card">
+                        <div class="ibs-metric-label">Total Books</div>
+                        <div class="ibs-metric-value">${totalBooks}</div>
+                    </div>
+                    <div class="ibs-metric-card">
+                        <div class="ibs-metric-label">Total Pages</div>
+                        <div class="ibs-metric-value">${totalPages.toLocaleString()}</div>
+                    </div>
+                    <div class="ibs-metric-card">
+                        <div class="ibs-metric-label">Avg Pages/Book</div>
+                        <div class="ibs-metric-value">${avgPages}</div>
+                    </div>
+                    <div class="ibs-metric-card">
+                        <div class="ibs-metric-label">Avg Book Age</div>
+                        <div class="ibs-metric-value">${avgAge}yr</div>
+                    </div>
+                    <div class="ibs-chart-container">
+                        <div class="ibs-chart">
+                            <div class="ibs-chart-title">By Genre</div>
+                            <div class="ibs-bar-chart">
+                                ${topGenres.map(([genre, count]) => `
+                                    <div class="ibs-bar-wrapper">
+                                        <div class="ibs-bar" style="height: ${(count / maxGenreCount) * 100}%;">
+                                            <div class="ibs-bar-count">${count}</div>
+                                        </div>
+                                        <div class="ibs-bar-label">${genre}</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                        <div class="ibs-chart">
+                            <div class="ibs-chart-title">By Decade Published</div>
+                            <div class="ibs-bar-chart">
+                                ${decades.map(([decade, count]) => `
+                                    <div class="ibs-bar-wrapper">
+                                        <div class="ibs-bar" style="height: ${(count / maxDecadeCount) * 100}%;">
+                                            <div class="ibs-bar-count">${count}</div>
+                                        </div>
+                                        <div class="ibs-bar-label">${decade}s</div>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    ${longest && shortest ? `
+                        <div class="ibs-extremes-grid" style="grid-column: 1 / -1;">
+                            <div class="ibs-extreme-book">
+                                <div class="ibs-isometric-book" style="--page-height: ${Math.max(30, (shortest.pageCount / longest.pageCount) * 130)}px;">
+                                    <div class="ibs-book-spine-iso">
+                                        <div class="ibs-isometric-cube-top"></div>
+                                        <div class="ibs-isometric-cube-right"></div>
+                                        <div class="ibs-isometric-cube-left"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="ibs-extreme-label">Shortest</div>
+                                    <div class="ibs-extreme-title">${shortest.title}</div>
+                                    <div class="ibs-extreme-meta">${shortest.author}</div>
+                                    <div class="ibs-extreme-meta">${shortest.pageCount.toLocaleString()} pages</div>
+                                </div>
+                            </div>
+                            <div class="ibs-extreme-book">
+                                <div class="ibs-isometric-book" style="--page-height: 130px;">
+                                    <div class="ibs-book-spine-iso">
+                                        <div class="ibs-isometric-cube-top"></div>
+                                        <div class="ibs-isometric-cube-right"></div>
+                                        <div class="ibs-isometric-cube-left"></div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div class="ibs-extreme-label">Longest</div>
+                                    <div class="ibs-extreme-title">${longest.title}</div>
+                                    <div class="ibs-extreme-meta">${longest.author}</div>
+                                    <div class="ibs-extreme-meta">${longest.pageCount.toLocaleString()} pages</div>
+                                </div>
+                            </div>
+                        </div>
+                    ` : ''}
+                    ${recommendedBooks.length > 0 ? `
+                        <div class="ibs-chart" style="grid-column: 1 / -1;">
+                            <div class="ibs-chart-title">Recommended Reads</div>
+                            <div class="ibs-recommended-list">
+                                ${recommendedBooks.slice(0, 5).map(book => `
+                                    <div class="ibs-recommended-item">
+                                        <div>
+                                            <div class="ibs-recommended-title">${book.title}</div>
+                                            <div class="ibs-recommended-author">${book.author}</div>
+                                        </div>
+                                    </div>
+                                `).join('')}
+                                ${recommendedBooks.length > 5 ? `<div class="ibs-extreme-meta" style="padding: 8px 16px;">...and ${recommendedBooks.length - 5} more</div>` : ''}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
         }
 
         renderBookshelf() {
@@ -617,14 +1208,19 @@
             bookDiv.style.setProperty('--offset', `${offsetPercent}%`);
             bookDiv.style.transform = `translateX(${offsetPercent}%)`;
 
-            // Show cover thumbnail if URL exists
-            const coverThumb = book.coverUrl
-                ? `<img class="ibs-book-cover-thumb" src="${book.coverUrl}" alt="${book.title}" style="height: ${height}px;">`
-                : '';
+            // Determine spine background (will be updated with gradient later if cover exists)
+            const spineBackground = book.coverUrl ? book.spineGradient : '#d3d3d3';
+
+            // Create cover element (either image or placeholder)
+            const coverElement = book.coverUrl
+                ? `<img class="ibs-book-cover-thumb" src="${book.coverUrl}" alt="${book.title}" style="height: ${height - 8}px;" data-book-id="${hash}">`
+                : `<div class="ibs-book-cover-placeholder" style="height: ${height - 8}px;">
+                     <div>${book.title.substring(0, 30)}${book.title.length > 30 ? '...' : ''}</div>
+                   </div>`;
 
             bookDiv.innerHTML = `
-                ${coverThumb}
-                <div class="ibs-book-spine" style="background: ${book.spineGradient}; min-height: ${height}px;">
+                <div class="ibs-book-spine" style="background: ${spineBackground}; min-height: ${height}px;" data-book-id="${hash}">
+                    ${coverElement}
                     <div class="ibs-book-content">
                         <div class="ibs-book-title">${book.title}</div>
                         ${metadata}
@@ -634,6 +1230,18 @@
             `;
 
             bookDiv.addEventListener('click', () => this.showModal(book));
+
+            // Extract colors from cover and update gradient asynchronously
+            if (book.coverUrl) {
+                this.extractDominantColors(book.coverUrl).then(gradient => {
+                    if (gradient) {
+                        const spine = bookDiv.querySelector(`[data-book-id="${hash}"]`);
+                        if (spine) {
+                            spine.style.background = gradient;
+                        }
+                    }
+                });
+            }
 
             return bookDiv;
         }
@@ -656,12 +1264,21 @@
             // Fetch cover image on-demand
             await this.enrichBookDataForModal(book);
 
+            // Extract colors for modal header
+            if (book.coverUrl) {
+                const gradient = await this.extractDominantColors(book.coverUrl);
+                if (gradient) {
+                    const modalHeader = modal.querySelector('.ibs-modal-header');
+                    modalHeader.style.background = gradient;
+                }
+            }
+
             const stars = book.rating ? '⭐'.repeat(Math.floor(parseFloat(book.rating))) : '';
 
             body.innerHTML = `
                 <div class="ibs-book-detail-grid">
                     <img src="${book.coverUrl}" alt="${book.title}" class="ibs-book-cover-large">
-                    <div class="ibs-book-info">
+                    <div class="ibs-book-info-column">
                         <div class="ibs-book-meta">
                             ${book.publishedYear ? `
                                 <div class="ibs-meta-item">
@@ -699,22 +1316,22 @@
                                     <span class="ibs-meta-value">${book.type}</span>
                                 </div>
                             ` : ''}
+                            ${book.rating ? `
+                                <div class="ibs-meta-item">
+                                    <span class="ibs-meta-label">Rating</span>
+                                    <div class="ibs-rating">${stars} ${book.rating}/5</div>
+                                </div>
+                            ` : ''}
+                            ${book.recommended ? '<span class="ibs-recommended-badge">✓ Recommended</span>' : ''}
                         </div>
-                        ${book.rating ? `
-                            <div class="ibs-meta-item">
-                                <span class="ibs-meta-label">Rating</span>
-                                <div class="ibs-rating">${stars} ${book.rating}/5</div>
+                        ${book.thoughts ? `
+                            <div class="ibs-book-thoughts">
+                                <h3 class="ibs-thoughts-title">My Thoughts</h3>
+                                <p class="ibs-thoughts-content">${book.thoughts}</p>
                             </div>
                         ` : ''}
-                        ${book.recommended ? '<span class="ibs-recommended-badge">✓ Recommended</span>' : ''}
                     </div>
                 </div>
-                ${book.thoughts ? `
-                    <div class="ibs-book-thoughts">
-                        <h3 class="ibs-thoughts-title">My Thoughts</h3>
-                        <p class="ibs-thoughts-content">${book.thoughts}</p>
-                    </div>
-                ` : ''}
             `;
 
             modal.classList.add('active');

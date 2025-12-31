@@ -1,0 +1,733 @@
+<!-- Interactive Bookshelf Widget - Embed this in your Ghost blog post -->
+<div id="interactive-bookshelf-root"></div>
+
+<style>
+    #interactive-bookshelf-root {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+    }
+
+    #interactive-bookshelf-root * {
+        box-sizing: border-box;
+    }
+
+    .ibs-container {
+        max-width: 100%;
+        margin: 0 auto;
+        background: transparent;
+        padding: 0;
+    }
+
+    .ibs-header {
+        display: none; /* Hidden in embed version */
+    }
+
+    .ibs-loading {
+        text-align: center;
+        padding: 60px 20px;
+        font-size: 1rem;
+        color: #999;
+        font-weight: 400;
+    }
+
+    .ibs-shelf-section {
+        position: relative;
+    }
+
+    .ibs-shelf-label {
+        display: none; /* Hidden in embed version */
+    }
+
+    .ibs-shelf {
+        background: transparent;
+        padding: 0;
+    }
+
+    .ibs-books-row {
+        display: flex;
+        flex-direction: column;
+        gap: 0;
+        align-items: center;
+    }
+
+    .ibs-book {
+        position: relative;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 100%;
+        max-width: 700px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        margin-bottom: 1px;
+        background: white;
+    }
+
+    .ibs-book:hover {
+        transform: translateX(calc(var(--offset) + 4px));
+        box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+        z-index: 10;
+    }
+
+    .ibs-book-cover-thumb {
+        width: auto;
+        object-fit: cover;
+        border-radius: 2px 0 0 2px;
+        flex-shrink: 0;
+        box-shadow: 2px 0 4px rgba(0,0,0,0.1);
+    }
+
+    .ibs-book-spine {
+        flex: 1;
+        min-height: 60px;
+        padding: 12px 20px;
+        border-radius: 0;
+        border: 1px solid rgba(0,0,0,0.08);
+        font-size: 1rem;
+        text-align: left;
+        overflow: hidden;
+        color: #2c2c2c;
+        position: relative;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .ibs-book-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 4px;
+        min-width: 0;
+    }
+
+    .ibs-book-title {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
+        font-weight: 600;
+        font-size: 1.5rem;
+        line-height: 1.3;
+        color: #1a1a1a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        letter-spacing: -0.01em;
+    }
+
+    .ibs-book-meta {
+        font-family: Georgia, 'Times New Roman', serif;
+        font-weight: 400;
+        font-size: 0.875rem;
+        line-height: 1.4;
+        color: #666;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        font-style: italic;
+    }
+
+    .ibs-book-type-icon {
+        width: 20px;
+        height: 20px;
+        opacity: 0.3;
+        flex-shrink: 0;
+    }
+
+    .ibs-modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        z-index: 999999;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        backdrop-filter: blur(5px);
+    }
+
+    .ibs-modal.active {
+        display: flex;
+        animation: ibsFadeIn 0.3s ease;
+    }
+
+    @keyframes ibsFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .ibs-modal-content {
+        background: rgba(255, 255, 255, 0.98);
+        max-width: 800px;
+        width: 100%;
+        max-height: 90vh;
+        overflow-y: auto;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        animation: ibsSlideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes ibsSlideUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .ibs-modal-header {
+        position: relative;
+        padding: 40px;
+        background: linear-gradient(135deg, #d4a574 0%, #c49563 100%);
+        color: white;
+    }
+
+    .ibs-modal-header h2 {
+        margin: 0 0 10px 0;
+        font-size: 2rem;
+        font-weight: 400;
+    }
+
+    .ibs-modal-header .author {
+        font-size: 1.3rem;
+        color: rgba(255,255,255,0.9);
+        margin: 0;
+    }
+
+    .ibs-close-modal {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: rgba(255,255,255,0.2);
+        border: none;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: white;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ibs-close-modal:hover {
+        background: rgba(255,255,255,0.3);
+        transform: rotate(90deg);
+    }
+
+    .ibs-modal-body {
+        padding: 40px;
+    }
+
+    .ibs-book-detail-grid {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 40px;
+        margin-bottom: 30px;
+    }
+
+    .ibs-book-cover-large {
+        width: 100%;
+        border-radius: 8px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .ibs-book-meta {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+
+    .ibs-meta-item {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+    }
+
+    .ibs-meta-label {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #6b5d54;
+        font-weight: 600;
+    }
+
+    .ibs-meta-value {
+        font-size: 1.1rem;
+        color: #2c1810;
+    }
+
+    .ibs-rating {
+        color: #f39c12;
+        font-size: 1.5rem;
+    }
+
+    .ibs-recommended-badge {
+        display: inline-block;
+        background: #27ae60;
+        color: white;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .ibs-book-thoughts {
+        margin-top: 30px;
+        padding-top: 30px;
+        border-top: 2px solid #e0d5c7;
+    }
+
+    .ibs-thoughts-title {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        color: #2c1810;
+    }
+
+    .ibs-thoughts-content {
+        line-height: 1.8;
+        font-size: 1.1rem;
+        color: #6b5d54;
+    }
+
+    @media (max-width: 768px) {
+        .ibs-book-detail-grid {
+            grid-template-columns: 1fr;
+        }
+        .ibs-header h2 {
+            font-size: 2rem;
+        }
+        .ibs-modal-header, .ibs-modal-body {
+            padding: 30px 20px;
+        }
+    }
+</style>
+
+<script>
+(function() {
+    'use strict';
+    
+    // Configuration - CUSTOMIZE THESE VALUES
+    const CONFIG = {
+        publishedUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRdrakOGAU-i8wluqmqjoQYUWjRMkv3e4WtCQPhWDogEvUE6sr-uqC_JXPKqpZqLqi636VeJ4eZ3slT/pub?output=csv',
+
+        // Hardcoded filters (no UI - change these values to filter the display)
+        // Examples:
+        //   defaultFilter: 'all'          - Show all books
+        //   defaultFilter: 'recommended'  - Show only recommended books (marked with ⭐)
+        //   defaultYear: '2024'           - Show only books read in 2024
+        //   defaultGenre: 'Fiction'       - Show only Fiction books
+        defaultFilter: 'all',
+        defaultYear: '',
+        defaultGenre: ''
+    };
+
+    class InteractiveBookshelf {
+        constructor(rootElement) {
+            this.root = rootElement;
+            this.books = [];
+            this.filteredBooks = [];
+            this.currentFilter = CONFIG.defaultFilter;
+            this.currentYear = CONFIG.defaultYear;
+            this.currentGenre = CONFIG.defaultGenre;
+            this.init();
+        }
+
+        async init() {
+            this.renderSkeleton();
+            await this.loadBooks();
+            this.applyFilters(); // Apply hardcoded filters from CONFIG
+            this.setupEventListeners();
+            this.renderBookshelf();
+        }
+
+        renderSkeleton() {
+            this.root.innerHTML = `
+                <div class="ibs-container">
+                    <div id="ibs-bookshelf" class="ibs-loading">Loading your bookshelf...</div>
+                </div>
+                <div class="ibs-modal" id="ibs-modal">
+                    <div class="ibs-modal-content">
+                        <div class="ibs-modal-header">
+                            <button class="ibs-close-modal" id="ibs-close-modal">×</button>
+                            <div id="ibs-modal-header"></div>
+                        </div>
+                        <div class="ibs-modal-body" id="ibs-modal-body"></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async loadBooks() {
+            try {
+                const url = CONFIG.publishedUrl;
+                const response = await fetch(url);
+                const csvText = await response.text();
+                
+                this.books = await this.parseCSV(csvText);
+                this.filteredBooks = [...this.books];
+            } catch (error) {
+                console.error('Error loading books:', error);
+                this.root.querySelector('#ibs-bookshelf').innerHTML = '<p class="ibs-loading">Error loading bookshelf. Please check the Google Sheet settings.</p>';
+            }
+        }
+
+        async parseCSV(csv) {
+            const lines = csv.split('\n');
+            const books = [];
+
+            for (let i = 1; i < lines.length; i++) {
+                if (!lines[i].trim()) continue;
+
+                const values = this.parseCSVLine(lines[i]);
+                if (values.length < 2 || !values[1]) continue;
+
+                const book = {
+                    recommended: values[0]?.toLowerCase() === 'yes' || values[0]?.toLowerCase() === 'y' || values[0]?.includes('⭐') || values[0]?.includes('*'),
+                    title: values[1],
+                    author: values[2] || 'Unknown Author',
+                    publishedYear: values[3] || '',
+                    type: values[4] || '',
+                    yearRead: values[5] || '',
+                    genre: values[6] || 'Uncategorized',
+                    subGenre: values[7] || '',
+                    pageCount: parseInt(values[8]) || 250,
+                    rating: values[9] || '',
+                    thoughts: values[10] || '',
+                    coverUrl: values[11] || '', // Pre-fetched from Apps Script
+                    spineGradient: this.generateSpineGradient(values[1] + (values[2] || ''))
+                };
+
+                books.push(book);
+            }
+
+            return books;
+        }
+
+        parseCSVLine(line) {
+            const values = [];
+            let current = '';
+            let inQuotes = false;
+
+            for (let i = 0; i < line.length; i++) {
+                const char = line[i];
+                
+                if (char === '"') {
+                    if (inQuotes && line[i + 1] === '"') {
+                        current += '"';
+                        i++;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (char === ',' && !inQuotes) {
+                    values.push(current.trim());
+                    current = '';
+                } else {
+                    current += char;
+                }
+            }
+            
+            values.push(current.trim());
+            return values;
+        }
+
+        async enrichBookDataForModal(book) {
+            // Only called when opening modal - fetches cover image on-demand
+            if (book.coverUrl) return; // Already fetched
+
+            try {
+                const searchUrl = `https://openlibrary.org/search.json?title=${encodeURIComponent(book.title)}&author=${encodeURIComponent(book.author)}&limit=1`;
+                const response = await fetch(searchUrl);
+                const data = await response.json();
+
+                if (data.docs && data.docs.length > 0) {
+                    const bookData = data.docs[0];
+
+                    if (bookData.cover_i) {
+                        book.coverUrl = `https://covers.openlibrary.org/b/id/${bookData.cover_i}-L.jpg`;
+                    }
+
+                    // Update published year if missing
+                    if (!book.publishedYear && bookData.first_publish_year) {
+                        book.publishedYear = bookData.first_publish_year;
+                    }
+                }
+            } catch (error) {
+                console.error(`Error fetching cover for "${book.title}":`, error);
+            }
+
+            // Fallback to placeholder if no cover found
+            if (!book.coverUrl) {
+                book.coverUrl = this.generatePlaceholderCover(book.title);
+            }
+        }
+
+        generatePlaceholderCover(title) {
+            const color = this.generateSpineColor(title);
+            return `data:image/svg+xml,${encodeURIComponent(`
+                <svg xmlns="http://www.w3.org/2000/svg" width="200" height="300">
+                    <rect width="200" height="300" fill="${color}"/>
+                    <text x="50%" y="50%" text-anchor="middle" fill="white" font-size="20" font-family="serif">
+                        ${title.substring(0, 20)}
+                    </text>
+                </svg>
+            `)}`;
+        }
+
+        generateSpineColor(text) {
+            let hash = 0;
+            for (let i = 0; i < text.length; i++) {
+                hash = text.charCodeAt(i) + ((hash << 5) - hash);
+            }
+
+            const hue = Math.abs(hash % 360);
+            const saturation = 45 + (Math.abs(hash) % 30);
+            const lightness = 35 + (Math.abs(hash >> 8) % 20);
+
+            return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+        }
+
+        generateSpineGradient(text) {
+            let hash = 0;
+            for (let i = 0; i < text.length; i++) {
+                hash = text.charCodeAt(i) + ((hash << 5) - hash);
+            }
+
+            // Generate muted grey/beige tones
+            const baseHues = [0, 30, 40, 200, 210, 220]; // Beiges, warm greys, cool greys
+            const hue = baseHues[Math.abs(hash) % baseHues.length];
+            const saturation = 3 + (Math.abs(hash) % 8); // Very low saturation (3-10%)
+            const lightness = 88 + (Math.abs(hash >> 8) % 8); // Light (88-95%)
+
+            const color = `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+            return color;
+        }
+
+        setupEventListeners() {
+            this.root.querySelector('#ibs-close-modal').addEventListener('click', () => {
+                this.root.querySelector('#ibs-modal').classList.remove('active');
+            });
+
+            this.root.querySelector('#ibs-modal').addEventListener('click', (e) => {
+                if (e.target.id === 'ibs-modal') {
+                    this.root.querySelector('#ibs-modal').classList.remove('active');
+                }
+            });
+        }
+
+        applyFilters() {
+            this.filteredBooks = this.books.filter(book => {
+                if (this.currentFilter === 'recommended' && !book.recommended) return false;
+                if (this.currentYear && book.yearRead !== this.currentYear) return false;
+                if (this.currentGenre && book.genre !== this.currentGenre) return false;
+                return true;
+            });
+
+            this.renderBookshelf();
+        }
+
+        renderBookshelf() {
+            const container = this.root.querySelector('#ibs-bookshelf');
+
+            if (this.filteredBooks.length === 0) {
+                container.innerHTML = '<p class="ibs-loading">No books available.</p>';
+                return;
+            }
+
+            // Single stack - no grouping by year
+            const section = document.createElement('div');
+            section.className = 'ibs-shelf-section';
+
+            section.innerHTML = `
+                <div class="ibs-shelf">
+                    <div class="ibs-books-row" id="ibs-books-stack"></div>
+                </div>
+            `;
+
+            container.innerHTML = '';
+            container.appendChild(section);
+
+            const booksRow = section.querySelector('#ibs-books-stack');
+            this.filteredBooks.forEach(book => {
+                booksRow.appendChild(this.createBookElement(book));
+            });
+        }
+
+        getBookTypeIcon(type) {
+            const typeNormalized = (type || 'print').toLowerCase();
+
+            if (typeNormalized.includes('digital') || typeNormalized.includes('ebook')) {
+                return `<svg class="ibs-book-type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="5" y="4" width="14" height="17" rx="2"/>
+                    <path d="M12 18h.01"/>
+                </svg>`;
+            } else if (typeNormalized.includes('audio')) {
+                return `<svg class="ibs-book-type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 18V5l12-2v13"/>
+                    <circle cx="6" cy="18" r="3"/>
+                    <circle cx="18" cy="16" r="3"/>
+                </svg>`;
+            } else {
+                // Print/default
+                return `<svg class="ibs-book-type-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/>
+                    <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
+                </svg>`;
+            }
+        }
+
+        createBookElement(book) {
+            const bookDiv = document.createElement('div');
+            bookDiv.className = 'ibs-book';
+
+            // Calculate height based on page count (60px - 120px range)
+            const minHeight = 60;
+            const maxHeight = 120;
+            const height = Math.min(maxHeight, Math.max(minHeight, (book.pageCount || 250) * 0.25));
+
+            // Generate consistent hash from title for random variations
+            let hash = 0;
+            const titleStr = book.title + (book.author || '');
+            for (let i = 0; i < titleStr.length; i++) {
+                hash = titleStr.charCodeAt(i) + ((hash << 5) - hash);
+            }
+
+            // Width variation: random ±10% (not based on height)
+            const widthRandom = (Math.abs(hash) % 200) / 1000; // 0 to 0.2
+            const widthVariation = 0.9 + widthRandom; // 0.9 to 1.1
+            const maxWidth = Math.floor(700 * widthVariation);
+
+            // Horizontal offset: ±6.5% for stacked look
+            const offsetRandom = (Math.abs(hash >> 8) % 131) / 1000; // 0 to 0.13
+            const offsetPercent = offsetRandom * 100 - 6.5; // -6.5 to +6.5
+
+            const authorYear = [];
+            if (book.author && book.author !== 'Unknown Author') {
+                authorYear.push(book.author);
+            }
+            if (book.publishedYear) {
+                authorYear.push(`${book.publishedYear}`);
+            }
+            const metadata = authorYear.length > 0 ? `<div class="ibs-book-meta">${authorYear.join(', ')}</div>` : '';
+
+            bookDiv.style.maxWidth = `${maxWidth}px`;
+            bookDiv.style.setProperty('--offset', `${offsetPercent}%`);
+            bookDiv.style.transform = `translateX(${offsetPercent}%)`;
+
+            // Show cover thumbnail if URL exists
+            const coverThumb = book.coverUrl
+                ? `<img class="ibs-book-cover-thumb" src="${book.coverUrl}" alt="${book.title}" style="height: ${height}px;">`
+                : '';
+
+            bookDiv.innerHTML = `
+                ${coverThumb}
+                <div class="ibs-book-spine" style="background: ${book.spineGradient}; min-height: ${height}px;">
+                    <div class="ibs-book-content">
+                        <div class="ibs-book-title">${book.title}</div>
+                        ${metadata}
+                    </div>
+                    ${this.getBookTypeIcon(book.type)}
+                </div>
+            `;
+
+            bookDiv.addEventListener('click', () => this.showModal(book));
+
+            return bookDiv;
+        }
+
+        async showModal(book) {
+            const modal = this.root.querySelector('#ibs-modal');
+            const header = this.root.querySelector('#ibs-modal-header');
+            const body = this.root.querySelector('#ibs-modal-body');
+
+            // Show modal immediately with loading state
+            modal.classList.add('active');
+
+            header.innerHTML = `
+                <h2>${book.title}</h2>
+                <p class="author">${book.author}</p>
+            `;
+
+            body.innerHTML = '<div class="ibs-loading">Loading book details...</div>';
+
+            // Fetch cover image on-demand
+            await this.enrichBookDataForModal(book);
+
+            const stars = book.rating ? '⭐'.repeat(Math.floor(parseFloat(book.rating))) : '';
+
+            body.innerHTML = `
+                <div class="ibs-book-detail-grid">
+                    <img src="${book.coverUrl}" alt="${book.title}" class="ibs-book-cover-large">
+                    <div class="ibs-book-info">
+                        <div class="ibs-book-meta">
+                            ${book.publishedYear ? `
+                                <div class="ibs-meta-item">
+                                    <span class="ibs-meta-label">Published</span>
+                                    <span class="ibs-meta-value">${book.publishedYear}</span>
+                                </div>
+                            ` : ''}
+                            ${book.yearRead ? `
+                                <div class="ibs-meta-item">
+                                    <span class="ibs-meta-label">Read In</span>
+                                    <span class="ibs-meta-value">${book.yearRead}</span>
+                                </div>
+                            ` : ''}
+                            ${book.genre ? `
+                                <div class="ibs-meta-item">
+                                    <span class="ibs-meta-label">Genre</span>
+                                    <span class="ibs-meta-value">${book.genre}</span>
+                                </div>
+                            ` : ''}
+                            ${book.subGenre ? `
+                                <div class="ibs-meta-item">
+                                    <span class="ibs-meta-label">Sub-Genre</span>
+                                    <span class="ibs-meta-value">${book.subGenre}</span>
+                                </div>
+                            ` : ''}
+                            ${book.pageCount ? `
+                                <div class="ibs-meta-item">
+                                    <span class="ibs-meta-label">Pages</span>
+                                    <span class="ibs-meta-value">${book.pageCount}</span>
+                                </div>
+                            ` : ''}
+                            ${book.type ? `
+                                <div class="ibs-meta-item">
+                                    <span class="ibs-meta-label">Format</span>
+                                    <span class="ibs-meta-value">${book.type}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                        ${book.rating ? `
+                            <div class="ibs-meta-item">
+                                <span class="ibs-meta-label">Rating</span>
+                                <div class="ibs-rating">${stars} ${book.rating}/5</div>
+                            </div>
+                        ` : ''}
+                        ${book.recommended ? '<span class="ibs-recommended-badge">✓ Recommended</span>' : ''}
+                    </div>
+                </div>
+                ${book.thoughts ? `
+                    <div class="ibs-book-thoughts">
+                        <h3 class="ibs-thoughts-title">My Thoughts</h3>
+                        <p class="ibs-thoughts-content">${book.thoughts}</p>
+                    </div>
+                ` : ''}
+            `;
+
+            modal.classList.add('active');
+        }
+    }
+
+    // Initialize when DOM is ready
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+            new InteractiveBookshelf(document.getElementById('interactive-bookshelf-root'));
+        });
+    } else {
+        new InteractiveBookshelf(document.getElementById('interactive-bookshelf-root'));
+    }
+})();
+</script>

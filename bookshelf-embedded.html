@@ -22,13 +22,171 @@
     }
 
     .ibs-metrics-title {
-        font-size: 0.75rem;
+        font-size: 1.125rem;
         font-weight: 700;
         text-transform: uppercase;
         letter-spacing: 0.1em;
         color: #666;
         text-align: center;
-        margin-bottom: 24px;
+    }
+
+    .ibs-library-title {
+        font-size: 1.125rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: #666;
+        text-align: center;
+        margin: 32px 0 16px;
+    }
+
+    .ibs-footer {
+        text-align: center;
+        font-size: 0.75rem;
+        color: #999;
+        margin-top: 48px;
+        padding: 24px 0;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .ibs-view-toggle {
+        display: flex;
+        gap: 8px;
+        justify-content: center;
+        margin: 24px 0 16px;
+    }
+
+    .ibs-view-btn {
+        padding: 6px 12px;
+        border: 1px solid #ddd;
+        background: #fff;
+        cursor: pointer;
+        font-size: 0.7rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        transition: all 0.2s;
+    }
+
+    .ibs-view-btn:hover {
+        background: #f5f5f5;
+    }
+
+    .ibs-view-btn.active {
+        background: #1a1a1a;
+        color: #fff;
+        border-color: #1a1a1a;
+    }
+
+    .ibs-books-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+        margin-top: 32px;
+    }
+
+    .ibs-book-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        text-align: center;
+    }
+
+    .ibs-book-cover-img {
+        width: 100%;
+        max-width: 150px;
+        height: 225px;
+        object-fit: cover;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .ibs-book-cover-placeholder {
+        width: 100%;
+        max-width: 150px;
+        height: 225px;
+        background: #d3d3d3;
+        border: 1px solid #ddd;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        color: #666;
+        text-align: center;
+        padding: 8px;
+    }
+
+    .ibs-book-card-title {
+        font-size: 0.9rem;
+        font-weight: 700;
+        color: #1a1a1a;
+    }
+
+    .ibs-book-card-meta {
+        font-size: 0.75rem;
+        color: #666;
+    }
+
+    .ibs-bookshelf-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 32px;
+        padding: 24px;
+    }
+
+    .ibs-grid-book-card {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .ibs-grid-book-card:hover {
+        transform: translateY(-4px);
+    }
+
+    .ibs-grid-book-cover {
+        width: 100%;
+        max-width: 180px;
+        height: 235px;
+        object-fit: contain;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .ibs-grid-book-cover-placeholder {
+        width: 100%;
+        max-width: 180px;
+        height: 235px;
+        background: #d3d3d3;
+        border: 1px solid #ddd;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .ibs-grid-placeholder-text {
+        font-size: 0.85rem;
+        color: #666;
+        text-align: center;
+        padding: 16px;
+    }
+
+    .ibs-grid-book-title {
+        font-size: 0.95rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        line-height: 1.3;
+    }
+
+    .ibs-grid-book-author {
+        font-size: 0.85rem;
+        color: #666;
     }
 
     .ibs-metrics-section {
@@ -53,9 +211,18 @@
         opacity: 0.5;
     }
 
+    .ibs-metrics-counts {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 32px;
+        margin-bottom: 32px;
+        position: relative;
+        z-index: 1;
+    }
+
     .ibs-metrics-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: 1fr;
         gap: 32px;
         position: relative;
         z-index: 1;
@@ -76,7 +243,7 @@
     }
 
     .ibs-metric-value {
-        font-size: 3rem;
+        font-size: 2.5rem;
         font-weight: 900;
         line-height: 1;
         color: #1a1a1a;
@@ -166,6 +333,43 @@
         color: #1a1a1a;
     }
 
+    .ibs-pie-chart-container {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        align-items: center;
+    }
+
+    .ibs-pie-chart {
+        display: flex;
+        justify-content: center;
+    }
+
+    .ibs-pie-legend {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+    }
+
+    .ibs-pie-legend-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.85rem;
+    }
+
+    .ibs-pie-legend-color {
+        width: 16px;
+        height: 16px;
+        border-radius: 2px;
+        flex-shrink: 0;
+    }
+
+    .ibs-pie-legend-label {
+        color: #666;
+    }
+
     .ibs-extremes-grid {
         display: grid;
         grid-template-columns: 1fr 1fr;
@@ -193,6 +397,9 @@
 
     .ibs-book-spine-iso {
         position: relative;
+        left: 90px;
+        top: 70px;
+        transform: scale(0.9);
     }
 
     /* Top panel - black cover */
@@ -675,24 +882,31 @@
             this.currentFilter = CONFIG.defaultFilter;
             this.currentYear = CONFIG.defaultYear;
             this.currentGenre = CONFIG.defaultGenre;
+            this.currentView = 'grid';
             this.init();
         }
 
         async init() {
             this.renderSkeleton();
             await this.loadBooks();
-            this.renderMetrics();
-            this.applyFilters(); // Apply hardcoded filters from CONFIG
+            this.applyFilters(); // Apply hardcoded filters from CONFIG and render metrics
             this.setupEventListeners();
-            this.renderBookshelf();
         }
 
         renderSkeleton() {
             this.root.innerHTML = `
                 <div class="ibs-container">
-                    <div class="ibs-metrics-title">Reading in Review</div>
+                    <div class="ibs-metrics-title">
+                        <span>Reading in Review</span>
+                    </div>
                     <div id="ibs-metrics" class="ibs-metrics-section"></div>
+                    <div class="ibs-library-title">The Library</div>
+                    <div class="ibs-view-toggle">
+                        <button class="ibs-view-btn" data-view="stack">Stack</button>
+                        <button class="ibs-view-btn active" data-view="grid">Grid</button>
+                    </div>
                     <div id="ibs-bookshelf" class="ibs-loading">Loading your bookshelf...</div>
+                    <div class="ibs-footer">Created with 'Bookshelf' by Recommended.Systems</div>
                 </div>
                 <div class="ibs-modal" id="ibs-modal">
                     <div class="ibs-modal-content">
@@ -742,7 +956,8 @@
                     pageCount: parseInt(values[8]) || 250,
                     rating: values[9] || '',
                     thoughts: values[10] || '',
-                    coverUrl: values[11] || '', // Pre-fetched from Apps Script
+                    coverUrl: values[11] || '', // Fallback URL from Apps Script
+                    coverBase64: values[12] || '', // Preferred base64 from Apps Script
                     spineGradient: this.generateSpineGradient(values[1] + (values[2] || ''))
                 };
 
@@ -781,7 +996,7 @@
 
         async enrichBookDataForModal(book) {
             // Only called when opening modal - fetches cover image on-demand
-            if (book.coverUrl) return; // Already fetched
+            if (book.coverUrl || book.coverBase64) return; // Already have cover data
 
             try {
                 const searchUrl = `https://openlibrary.org/search.json?title=${encodeURIComponent(book.title)}&author=${encodeURIComponent(book.author)}&limit=1`;
@@ -950,6 +1165,17 @@
                     this.root.querySelector('#ibs-modal').classList.remove('active');
                 }
             });
+
+            // View toggle
+            this.root.querySelectorAll('.ibs-view-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const view = e.target.dataset.view;
+                    this.root.querySelectorAll('.ibs-view-btn').forEach(b => b.classList.remove('active'));
+                    e.target.classList.add('active');
+                    this.currentView = view;
+                    this.renderBookshelf();
+                });
+            });
         }
 
         applyFilters() {
@@ -960,27 +1186,28 @@
                 return true;
             });
 
+            this.renderMetrics();
             this.renderBookshelf();
         }
 
         renderMetrics() {
-            const totalBooks = this.books.length;
-            const totalPages = this.books.reduce((sum, book) => sum + (book.pageCount || 0), 0);
+            const totalBooks = this.filteredBooks.length;
+            const totalPages = this.filteredBooks.reduce((sum, book) => sum + (book.pageCount || 0), 0);
             const avgPages = totalBooks > 0 ? Math.round(totalPages / totalBooks) : 0;
 
             // Calculate average publication age
             const currentYear = new Date().getFullYear();
-            const booksWithYear = this.books.filter(b => b.publishedYear && !isNaN(b.publishedYear));
+            const booksWithYear = this.filteredBooks.filter(b => b.publishedYear && !isNaN(b.publishedYear));
             const avgAge = booksWithYear.length > 0
                 ? Math.round(booksWithYear.reduce((sum, book) => sum + (currentYear - book.publishedYear), 0) / booksWithYear.length)
                 : 0;
 
             // Recommended rate
-            const recommendedCount = this.books.filter(b => b.recommended).length;
+            const recommendedCount = this.filteredBooks.filter(b => b.recommended).length;
             const recommendedRate = totalBooks > 0 ? Math.round((recommendedCount / totalBooks) * 100) : 0;
 
             // Find extremes
-            const booksWithPages = this.books.filter(b => b.pageCount > 0);
+            const booksWithPages = this.filteredBooks.filter(b => b.pageCount > 0);
             const longest = booksWithPages.length > 0
                 ? booksWithPages.reduce((max, book) => book.pageCount > max.pageCount ? book : max)
                 : null;
@@ -989,11 +1216,11 @@
                 : null;
 
             // Get recommended books
-            const recommendedBooks = this.books.filter(b => b.recommended);
+            const recommendedBooks = this.filteredBooks.filter(b => b.recommended);
 
             // Count genres
             const genreCounts = {};
-            this.books.forEach(book => {
+            this.filteredBooks.forEach(book => {
                 const genre = book.genre || 'Uncategorized';
                 genreCounts[genre] = (genreCounts[genre] || 0) + 1;
             });
@@ -1003,9 +1230,38 @@
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 8);
 
+            // Count subgenres
+            const subGenreCounts = {};
+            this.filteredBooks.forEach(book => {
+                if (book.subGenre && book.subGenre.trim()) {
+                    const subGenre = book.subGenre;
+                    subGenreCounts[subGenre] = (subGenreCounts[subGenre] || 0) + 1;
+                }
+            });
+
+            // Sort subgenres by count and take top 8
+            const topSubGenres = Object.entries(subGenreCounts)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 8);
+
+            // Count by type (digital, print, audio)
+            const typeCounts = {};
+            this.filteredBooks.forEach(book => {
+                const type = (book.type || 'Print').toLowerCase();
+                let category;
+                if (type.includes('digital') || type.includes('ebook')) {
+                    category = 'Digital';
+                } else if (type.includes('audio')) {
+                    category = 'Audio';
+                } else {
+                    category = 'Print';
+                }
+                typeCounts[category] = (typeCounts[category] || 0) + 1;
+            });
+
             // Count by decade
             const decadeCounts = {};
-            this.books.forEach(book => {
+            this.filteredBooks.forEach(book => {
                 if (book.publishedYear) {
                     const decade = Math.floor(book.publishedYear / 10) * 10;
                     decadeCounts[decade] = (decadeCounts[decade] || 0) + 1;
@@ -1018,10 +1274,11 @@
 
             const metricsContainer = this.root.querySelector('#ibs-metrics');
             const maxGenreCount = Math.max(...topGenres.map(g => g[1]));
+            const maxSubGenreCount = topSubGenres.length > 0 ? Math.max(...topSubGenres.map(g => g[1])) : 1;
             const maxDecadeCount = Math.max(...decades.map(d => d[1]));
 
             metricsContainer.innerHTML = `
-                <div class="ibs-metrics-grid">
+                <div class="ibs-metrics-counts">
                     <div class="ibs-metric-card">
                         <div class="ibs-metric-label">Total Books</div>
                         <div class="ibs-metric-value">${totalBooks}</div>
@@ -1038,6 +1295,8 @@
                         <div class="ibs-metric-label">Avg Book Age</div>
                         <div class="ibs-metric-value">${avgAge}yr</div>
                     </div>
+                </div>
+                <div class="ibs-metrics-grid">
                     <div class="ibs-chart-container">
                         <div class="ibs-chart">
                             <div class="ibs-chart-title">By Genre</div>
@@ -1052,6 +1311,39 @@
                                 `).join('')}
                             </div>
                         </div>
+                        ${topSubGenres.length > 0 ? `
+                            <div class="ibs-chart">
+                                <div class="ibs-chart-title">By Sub-Genre</div>
+                                <div class="ibs-bar-chart">
+                                    ${topSubGenres.map(([subGenre, count]) => `
+                                        <div class="ibs-bar-wrapper">
+                                            <div class="ibs-bar" style="height: ${(count / maxSubGenreCount) * 100}%;">
+                                                <div class="ibs-bar-count">${count}</div>
+                                            </div>
+                                            <div class="ibs-bar-label">${subGenre}</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                    <div class="ibs-chart-container">
+                        ${Object.keys(typeCounts).length > 0 ? `
+                            <div class="ibs-pie-chart-container">
+                                <div class="ibs-chart-title">By Type</div>
+                                <div class="ibs-pie-chart">
+                                    ${this.createPieChart(typeCounts, totalBooks)}
+                                </div>
+                                <div class="ibs-pie-legend">
+                                    ${Object.entries(typeCounts).map(([type, count]) => `
+                                        <div class="ibs-pie-legend-item">
+                                            <div class="ibs-pie-legend-color" style="background: ${this.getTypeColor(type)};"></div>
+                                            <div class="ibs-pie-legend-label">${type}: ${count} (${Math.round((count / totalBooks) * 100)}%)</div>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
                         <div class="ibs-chart">
                             <div class="ibs-chart-title">By Decade Published</div>
                             <div class="ibs-bar-chart">
@@ -1066,8 +1358,9 @@
                             </div>
                         </div>
                     </div>
+                </div>
                     ${longest && shortest ? `
-                        <div class="ibs-extremes-grid" style="grid-column: 1 / -1;">
+                        <div class="ibs-extremes-grid view-content" data-view="extremes" style="grid-column: 1 / -1;">
                             <div class="ibs-extreme-book">
                                 <div class="ibs-isometric-book" style="--page-height: ${Math.max(30, (shortest.pageCount / longest.pageCount) * 130)}px;">
                                     <div class="ibs-book-spine-iso">
@@ -1099,6 +1392,19 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="ibs-books-grid view-content" data-view="grid" style="display: none; grid-column: 1 / -1;">
+                            ${this.books.slice(0, 6).map(book => `
+                                <div class="ibs-book-card">
+                                    ${book.coverUrl ?
+                                        `<img src="${book.coverUrl}" alt="${book.title}" class="ibs-book-cover-img">` :
+                                        `<div class="ibs-book-cover-placeholder">${book.title}</div>`
+                                    }
+                                    <div class="ibs-book-card-title">${book.title}</div>
+                                    <div class="ibs-book-card-meta">${book.author}</div>
+                                    <div class="ibs-book-card-meta">${book.pageCount.toLocaleString()} pages</div>
+                                </div>
+                            `).join('')}
+                        </div>
                     ` : ''}
                     ${recommendedBooks.length > 0 ? `
                         <div class="ibs-chart" style="grid-column: 1 / -1;">
@@ -1120,6 +1426,50 @@
             `;
         }
 
+        getTypeColor(type) {
+            const colors = {
+                'Print': '#1a1a1a',
+                'Digital': '#666',
+                'Audio': '#999'
+            };
+            return colors[type] || '#ccc';
+        }
+
+        createPieChart(typeCounts, total) {
+            let currentAngle = 0;
+            const radius = 60;
+            const cx = 70;
+            const cy = 70;
+
+            const slices = Object.entries(typeCounts).map(([type, count]) => {
+                const percentage = count / total;
+                const angle = percentage * 360;
+                const startAngle = currentAngle;
+                const endAngle = currentAngle + angle;
+
+                currentAngle = endAngle;
+
+                // Convert to radians
+                const startRad = (startAngle - 90) * Math.PI / 180;
+                const endRad = (endAngle - 90) * Math.PI / 180;
+
+                // Calculate start and end points
+                const x1 = cx + radius * Math.cos(startRad);
+                const y1 = cy + radius * Math.sin(startRad);
+                const x2 = cx + radius * Math.cos(endRad);
+                const y2 = cy + radius * Math.sin(endRad);
+
+                const largeArc = angle > 180 ? 1 : 0;
+
+                return `<path d="M ${cx} ${cy} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} Z"
+                        fill="${this.getTypeColor(type)}"
+                        stroke="#fff"
+                        stroke-width="2"/>`;
+            }).join('');
+
+            return `<svg viewBox="0 0 140 140" style="width: 140px; height: 140px;">${slices}</svg>`;
+        }
+
         renderBookshelf() {
             const container = this.root.querySelector('#ibs-bookshelf');
 
@@ -1128,23 +1478,36 @@
                 return;
             }
 
-            // Single stack - no grouping by year
-            const section = document.createElement('div');
-            section.className = 'ibs-shelf-section';
-
-            section.innerHTML = `
-                <div class="ibs-shelf">
-                    <div class="ibs-books-row" id="ibs-books-stack"></div>
-                </div>
-            `;
-
             container.innerHTML = '';
-            container.appendChild(section);
 
-            const booksRow = section.querySelector('#ibs-books-stack');
-            this.filteredBooks.forEach(book => {
-                booksRow.appendChild(this.createBookElement(book));
-            });
+            if (this.currentView === 'grid') {
+                // Grid view
+                const gridContainer = document.createElement('div');
+                gridContainer.className = 'ibs-bookshelf-grid';
+
+                this.filteredBooks.forEach(book => {
+                    gridContainer.appendChild(this.createGridBookElement(book));
+                });
+
+                container.appendChild(gridContainer);
+            } else {
+                // Stack view
+                const section = document.createElement('div');
+                section.className = 'ibs-shelf-section';
+
+                section.innerHTML = `
+                    <div class="ibs-shelf">
+                        <div class="ibs-books-row" id="ibs-books-stack"></div>
+                    </div>
+                `;
+
+                container.appendChild(section);
+
+                const booksRow = section.querySelector('#ibs-books-stack');
+                this.filteredBooks.forEach(book => {
+                    booksRow.appendChild(this.createBookElement(book));
+                });
+            }
         }
 
         getBookTypeIcon(type) {
@@ -1208,12 +1571,15 @@
             bookDiv.style.setProperty('--offset', `${offsetPercent}%`);
             bookDiv.style.transform = `translateX(${offsetPercent}%)`;
 
+            // Prefer base64, fall back to URL
+            const imageSrc = book.coverBase64 || book.coverUrl;
+
             // Determine spine background (will be updated with gradient later if cover exists)
-            const spineBackground = book.coverUrl ? book.spineGradient : '#d3d3d3';
+            const spineBackground = imageSrc ? book.spineGradient : '#d3d3d3';
 
             // Create cover element (either image or placeholder)
-            const coverElement = book.coverUrl
-                ? `<img class="ibs-book-cover-thumb" src="${book.coverUrl}" alt="${book.title}" style="height: ${height - 8}px;" data-book-id="${hash}">`
+            const coverElement = imageSrc
+                ? `<img class="ibs-book-cover-thumb" src="${imageSrc}" alt="${book.title}" style="height: ${height - 8}px;" data-book-id="${hash}">`
                 : `<div class="ibs-book-cover-placeholder" style="height: ${height - 8}px;">
                      <div>${book.title.substring(0, 30)}${book.title.length > 30 ? '...' : ''}</div>
                    </div>`;
@@ -1232,8 +1598,8 @@
             bookDiv.addEventListener('click', () => this.showModal(book));
 
             // Extract colors from cover and update gradient asynchronously
-            if (book.coverUrl) {
-                this.extractDominantColors(book.coverUrl).then(gradient => {
+            if (imageSrc) {
+                this.extractDominantColors(imageSrc).then(gradient => {
                     if (gradient) {
                         const spine = bookDiv.querySelector(`[data-book-id="${hash}"]`);
                         if (spine) {
@@ -1244,6 +1610,43 @@
             }
 
             return bookDiv;
+        }
+
+        createGridBookElement(book) {
+            const cardDiv = document.createElement('div');
+            cardDiv.className = 'ibs-grid-book-card';
+
+            // Generate consistent hash from title for book ID
+            let hash = 0;
+            const titleStr = book.title + (book.author || '');
+            for (let i = 0; i < titleStr.length; i++) {
+                hash = titleStr.charCodeAt(i) + ((hash << 5) - hash);
+            }
+
+            const authorWithYear = book.publishedYear
+                ? `${book.author || 'Unknown Author'} (${book.publishedYear})`
+                : (book.author || 'Unknown Author');
+
+            // Prefer base64, fall back to URL, then placeholder
+            const imageSrc = book.coverBase64 || book.coverUrl;
+            const coverElement = imageSrc
+                ? `<img class="ibs-grid-book-cover" src="${imageSrc}" alt="${book.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                   <div class="ibs-grid-book-cover-placeholder" style="display:none;">
+                       <div class="ibs-grid-placeholder-text">${book.title.substring(0, 30)}${book.title.length > 30 ? '...' : ''}</div>
+                   </div>`
+                : `<div class="ibs-grid-book-cover-placeholder">
+                       <div class="ibs-grid-placeholder-text">${book.title.substring(0, 30)}${book.title.length > 30 ? '...' : ''}</div>
+                   </div>`;
+
+            cardDiv.innerHTML = `
+                ${coverElement}
+                <div class="ibs-grid-book-title">${book.title}</div>
+                <div class="ibs-grid-book-author">${authorWithYear}</div>
+            `;
+
+            cardDiv.addEventListener('click', () => this.showModal(book));
+
+            return cardDiv;
         }
 
         async showModal(book) {
@@ -1264,9 +1667,12 @@
             // Fetch cover image on-demand
             await this.enrichBookDataForModal(book);
 
+            // Prefer base64, fall back to URL
+            const imageSrc = book.coverBase64 || book.coverUrl;
+
             // Extract colors for modal header
-            if (book.coverUrl) {
-                const gradient = await this.extractDominantColors(book.coverUrl);
+            if (imageSrc) {
+                const gradient = await this.extractDominantColors(imageSrc);
                 if (gradient) {
                     const modalHeader = modal.querySelector('.ibs-modal-header');
                     modalHeader.style.background = gradient;
@@ -1277,7 +1683,7 @@
 
             body.innerHTML = `
                 <div class="ibs-book-detail-grid">
-                    <img src="${book.coverUrl}" alt="${book.title}" class="ibs-book-cover-large">
+                    <img src="${imageSrc}" alt="${book.title}" class="ibs-book-cover-large">
                     <div class="ibs-book-info-column">
                         <div class="ibs-book-meta">
                             ${book.publishedYear ? `

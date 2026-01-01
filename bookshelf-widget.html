@@ -57,6 +57,94 @@
             margin-bottom: 24px;
         }
 
+        .view-toggle {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            margin: 24px 0 16px;
+        }
+
+        .view-btn {
+            padding: 8px 16px;
+            border: 1px solid #ddd;
+            background: #fff;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .view-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .view-btn.active {
+            background: #1a1a1a;
+            color: #fff;
+            border-color: #1a1a1a;
+        }
+
+        .bookshelf-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 32px;
+            padding: 24px;
+        }
+
+        .grid-book-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .grid-book-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .grid-book-cover {
+            width: 100%;
+            max-width: 180px;
+            height: 240px;
+            object-fit: contain;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .grid-book-cover-placeholder {
+            width: 100%;
+            max-width: 180px;
+            height: 240px;
+            background: #d3d3d3;
+            border: 1px solid #ddd;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .grid-placeholder-text {
+            font-size: 0.85rem;
+            color: #666;
+            text-align: center;
+            padding: 16px;
+        }
+
+        .grid-book-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #1a1a1a;
+            line-height: 1.3;
+        }
+
+        .grid-book-author {
+            font-size: 0.85rem;
+            color: #666;
+        }
+
         .metrics-section {
             max-width: 1200px;
             margin: 0 auto 48px;
@@ -230,6 +318,9 @@
 
         .book-spine-iso {
             position: relative;
+            left: 90px;
+            top: 70px;
+            transform: scale(0.9);
         }
 
         /* Top panel - black cover */
@@ -748,6 +839,11 @@
             <button class="filter-btn" data-filter="recommended">Recommended</button>
         </div>
 
+        <div class="view-toggle">
+            <button class="view-btn" data-view="stack">Stack</button>
+            <button class="view-btn active" data-view="grid">Grid</button>
+        </div>
+
         <div id="bookshelf" class="loading">Loading your bookshelf...</div>
     </div>
 
@@ -774,6 +870,7 @@
                 this.currentFilter = 'all';
                 this.currentYear = '';
                 this.currentGenre = '';
+                this.currentView = 'grid';
                 this.init();
             }
 
@@ -821,7 +918,8 @@
                         pageCount: parseInt(values[8]) || 250,
                         rating: values[9] || '',
                         thoughts: values[10] || '',
-                        coverUrl: values[11] || '', // Pre-fetched from Apps Script
+                        coverUrl: values[11] || '', // Fallback URL from Apps Script
+                        coverBase64: values[12] || '', // Preferred base64 from Apps Script
                         spineGradient: this.generateSpineGradient(values[1] + (values[2] || ''))
                     };
 
@@ -860,7 +958,7 @@
 
             async enrichBookDataForModal(book) {
                 // Only called when opening modal - fetches cover image on-demand
-                if (book.coverUrl) return; // Already fetched
+                if (book.coverUrl || book.coverBase64) return; // Already have cover data
 
                 try {
                     const searchUrl = `https://openlibrary.org/search.json?title=${encodeURIComponent(book.title)}&author=${encodeURIComponent(book.author)}&limit=1`;
@@ -1039,6 +1137,17 @@
                     if (e.target.id === 'bookModal') {
                         document.getElementById('bookModal').classList.remove('active');
                     }
+                });
+
+                // View toggle
+                document.querySelectorAll('.view-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const view = e.target.dataset.view;
+                        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.currentView = view;
+                        this.renderBookshelf();
+                    });
                 });
             }
 
@@ -1368,23 +1477,36 @@
                     return;
                 }
 
-                // Single stack - no grouping by year
-                const section = document.createElement('div');
-                section.className = 'shelf-section';
-
-                section.innerHTML = `
-                    <div class="shelf">
-                        <div class="books-row" id="books-stack"></div>
-                    </div>
-                `;
-
                 container.innerHTML = '';
-                container.appendChild(section);
 
-                const booksRow = section.querySelector('#books-stack');
-                this.filteredBooks.forEach(book => {
-                    booksRow.appendChild(this.createBookElement(book));
-                });
+                if (this.currentView === 'grid') {
+                    // Grid view
+                    const gridContainer = document.createElement('div');
+                    gridContainer.className = 'bookshelf-grid';
+
+                    this.filteredBooks.forEach(book => {
+                        gridContainer.appendChild(this.createGridBookElement(book));
+                    });
+
+                    container.appendChild(gridContainer);
+                } else {
+                    // Stack view
+                    const section = document.createElement('div');
+                    section.className = 'shelf-section';
+
+                    section.innerHTML = `
+                        <div class="shelf">
+                            <div class="books-row" id="books-stack"></div>
+                        </div>
+                    `;
+
+                    container.appendChild(section);
+
+                    const booksRow = section.querySelector('#books-stack');
+                    this.filteredBooks.forEach(book => {
+                        booksRow.appendChild(this.createBookElement(book));
+                    });
+                }
             }
 
             getBookTypeIcon(type) {
@@ -1448,12 +1570,15 @@
                 bookDiv.style.setProperty('--offset', `${offsetPercent}%`);
                 bookDiv.style.transform = `translateX(${offsetPercent}%)`;
 
+                // Prefer base64, fall back to URL
+                const imageSrc = book.coverBase64 || book.coverUrl;
+
                 // Determine spine background (will be updated with gradient later if cover exists)
-                const spineBackground = book.coverUrl ? book.spineGradient : '#d3d3d3';
+                const spineBackground = imageSrc ? book.spineGradient : '#d3d3d3';
 
                 // Create cover element (either image or placeholder)
-                const coverElement = book.coverUrl
-                    ? `<img class="book-cover-thumb" src="${book.coverUrl}" alt="${book.title}" style="height: ${height - 8}px;" data-book-id="${hash}">`
+                const coverElement = imageSrc
+                    ? `<img class="book-cover-thumb" src="${imageSrc}" alt="${book.title}" style="height: ${height - 8}px;" data-book-id="${hash}">`
                     : `<div class="book-cover-placeholder" style="height: ${height - 8}px;">
                          <div>${book.title.substring(0, 30)}${book.title.length > 30 ? '...' : ''}</div>
                        </div>`;
@@ -1472,8 +1597,8 @@
                 bookDiv.addEventListener('click', () => this.showModal(book));
 
                 // Extract colors from cover and update gradient asynchronously
-                if (book.coverUrl) {
-                    this.extractDominantColors(book.coverUrl).then(gradient => {
+                if (imageSrc) {
+                    this.extractDominantColors(imageSrc).then(gradient => {
                         if (gradient) {
                             const spine = bookDiv.querySelector(`[data-book-id="${hash}"]`);
                             if (spine) {
@@ -1484,6 +1609,43 @@
                 }
 
                 return bookDiv;
+            }
+
+            createGridBookElement(book) {
+                const cardDiv = document.createElement('div');
+                cardDiv.className = 'grid-book-card';
+
+                // Generate consistent hash from title for book ID
+                let hash = 0;
+                const titleStr = book.title + (book.author || '');
+                for (let i = 0; i < titleStr.length; i++) {
+                    hash = titleStr.charCodeAt(i) + ((hash << 5) - hash);
+                }
+
+                const authorWithYear = book.publishedYear
+                    ? `${book.author || 'Unknown Author'} (${book.publishedYear})`
+                    : (book.author || 'Unknown Author');
+
+                // Prefer base64, fall back to URL, then placeholder
+                const imageSrc = book.coverBase64 || book.coverUrl;
+                const coverElement = imageSrc
+                    ? `<img class="grid-book-cover" src="${imageSrc}" alt="${book.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                       <div class="grid-book-cover-placeholder" style="display:none;">
+                           <div class="grid-placeholder-text">${book.title.substring(0, 30)}${book.title.length > 30 ? '...' : ''}</div>
+                       </div>`
+                    : `<div class="grid-book-cover-placeholder">
+                           <div class="grid-placeholder-text">${book.title.substring(0, 30)}${book.title.length > 30 ? '...' : ''}</div>
+                       </div>`;
+
+                cardDiv.innerHTML = `
+                    ${coverElement}
+                    <div class="grid-book-title">${book.title}</div>
+                    <div class="grid-book-author">${authorWithYear}</div>
+                `;
+
+                cardDiv.addEventListener('click', () => this.showModal(book));
+
+                return cardDiv;
             }
 
             async showModal(book) {
@@ -1504,9 +1666,12 @@
                 // Fetch cover image on-demand
                 await this.enrichBookDataForModal(book);
 
+                // Prefer base64, fall back to URL
+                const imageSrc = book.coverBase64 || book.coverUrl;
+
                 // Extract colors for modal header
-                if (book.coverUrl) {
-                    const gradient = await this.extractDominantColors(book.coverUrl);
+                if (imageSrc) {
+                    const gradient = await this.extractDominantColors(imageSrc);
                     if (gradient) {
                         const modalHeader = modal.querySelector('.modal-header');
                         modalHeader.style.background = gradient;
@@ -1517,7 +1682,7 @@
 
                 body.innerHTML = `
                     <div class="book-detail-grid">
-                        <img src="${book.coverUrl}" alt="${book.title}" class="book-cover-large">
+                        <img src="${imageSrc}" alt="${book.title}" class="book-cover-large">
                         <div class="book-info-column">
                             <div class="book-meta">
                                 ${book.publishedYear ? `

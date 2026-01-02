@@ -971,11 +971,34 @@
     </div>
 
     <script>
-        // Configuration - UPDATE THIS WITH YOUR PUBLISHED GOOGLE SHEET URL
+        // ============================================================================
+        // CONFIGURATION - EDIT THIS SECTION ONLY
+        // ============================================================================
+        //
+        // 1. UPDATE the publishedUrl with your Google Sheet's published CSV URL
+        //
+        // How to get your URL:
+        //   • In Google Sheets: File → Share → Publish to web
+        //   • Select your sheet and choose "Comma-separated values (.csv)"
+        //   • Click Publish and copy the URL
+        //   • Paste it below (replace the example URL)
+        //
+        // ============================================================================
+
         const CONFIG = {
-            publishedUrl: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRdrakOGAU-i8wluqmqjoQYUWjRMkv3e4WtCQPhWDogEvUE6sr-uqC_JXPKqpZqLqi636VeJ4eZ3slT/pub?output=csv'
+            publishedUrl: 'YOUR_PUBLISHED_GOOGLE_SHEET_CSV_URL_HERE'
         };
 
+        // ============================================================================
+        // DO NOT EDIT BELOW THIS LINE
+        // ============================================================================
+
+        /**
+         * Main BookshelfWidget class
+         *
+         * Handles loading book data from Google Sheets, rendering the bookshelf
+         * in different views (stack/grid), and displaying analytics.
+         */
         class BookshelfWidget {
             constructor() {
                 this.books = [];
@@ -995,6 +1018,9 @@
                 this.renderBookshelf();
             }
 
+            /**
+             * Fetch and parse books from published Google Sheet CSV
+             */
             async loadBooks() {
                 try {
                     const url = CONFIG.publishedUrl;
@@ -1009,6 +1035,10 @@
                 }
             }
 
+            /**
+             * Parse CSV data into book objects
+             * Expected columns: Recommended, Title, Author, PublishedYear, Type, YearRead, Genre, SubGenre, Pages, Rating, Thoughts, CoverURL
+             */
             async parseCSV(csv) {
                 const lines = csv.split('\n');
                 const books = [];
@@ -1041,6 +1071,9 @@
                 return books;
             }
 
+            /**
+             * Parse a single CSV line, handling quoted fields with commas
+             */
             parseCSVLine(line) {
                 const values = [];
                 let current = '';
@@ -1068,9 +1101,12 @@
                 return values;
             }
 
+            /**
+             * Fetch book cover from Open Library API (fallback for books without cover URLs)
+             * Only called when opening modal - fetches cover image on-demand
+             */
             async enrichBookDataForModal(book) {
-                // Only called when opening modal - fetches cover image on-demand
-                if (book.coverUrl) return; // Already have cover data
+                if (book.coverUrl) return;
 
                 try {
                     const searchUrl = `https://openlibrary.org/search.json?title=${encodeURIComponent(book.title)}&author=${encodeURIComponent(book.author)}&limit=1`;
@@ -1124,14 +1160,17 @@
                 return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
             }
 
+            /**
+             * Generate a muted color for book spine backgrounds
+             * Uses deterministic hashing so each book always has the same color
+             */
             generateSpineGradient(text) {
                 let hash = 0;
                 for (let i = 0; i < text.length; i++) {
                     hash = text.charCodeAt(i) + ((hash << 5) - hash);
                 }
 
-                // Generate muted grey/beige tones for fallback
-                const baseHues = [0, 30, 40, 200, 210, 220]; // Beiges, warm greys, cool greys
+                const baseHues = [0, 30, 40, 200, 210, 220];
                 const hue = baseHues[Math.abs(hash) % baseHues.length];
                 const saturation = 3 + (Math.abs(hash) % 8); // Very low saturation (3-10%)
                 const lightness = 88 + (Math.abs(hash >> 8) % 8); // Light (88-95%)
@@ -1140,6 +1179,10 @@
                 return color;
             }
 
+            /**
+             * Extract dominant colors from book cover image for gradient backgrounds
+             * Returns a CSS linear-gradient string
+             */
             async extractDominantColors(imageUrl) {
                 return new Promise((resolve) => {
                     const img = new Image();
@@ -1150,7 +1193,6 @@
                             const canvas = document.createElement('canvas');
                             const ctx = canvas.getContext('2d');
 
-                            // Use small canvas for performance
                             canvas.width = 100;
                             canvas.height = 150;
                             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
@@ -1158,9 +1200,8 @@
                             const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
                             const pixels = imageData.data;
 
-                            // Color clustering - find dominant colors
                             const colorCounts = {};
-                            for (let i = 0; i < pixels.length; i += 4 * 10) { // Sample every 10th pixel
+                            for (let i = 0; i < pixels.length; i += 4 * 10) {
                                 const r = Math.round(pixels[i] / 20) * 20;
                                 const g = Math.round(pixels[i + 1] / 20) * 20;
                                 const b = Math.round(pixels[i + 2] / 20) * 20;
@@ -1227,6 +1268,21 @@
                     s: Math.round(s * 100),
                     l: Math.round(l * 100)
                 };
+            }
+
+            /**
+             * Escape HTML to prevent XSS attacks
+             * Sanitizes user-controlled data before inserting into HTML
+             */
+            escapeHtml(unsafe) {
+                if (!unsafe) return '';
+                const text = String(unsafe);
+                return text
+                    .replace(/&/g, "&amp;")
+                    .replace(/</g, "&lt;")
+                    .replace(/>/g, "&gt;")
+                    .replace(/"/g, "&quot;")
+                    .replace(/'/g, "&#039;");
             }
 
             setupEventListeners() {
@@ -1309,6 +1365,9 @@
                 this.renderBookshelf();
             }
 
+            /**
+             * Render reading analytics: metrics, charts, and insights
+             */
             renderMetrics() {
                 const totalBooks = this.books.length;
                 const totalPages = this.books.reduce((sum, book) => sum + (book.pageCount || 0), 0);
@@ -1449,7 +1508,7 @@
                                             <div class="bar" style="height: ${(count / maxGenreCount) * 100}%;">
                                                 <div class="bar-count">${count}</div>
                                             </div>
-                                            <div class="bar-label">${genre}</div>
+                                            <div class="bar-label">${this.escapeHtml(genre)}</div>
                                         </div>
                                     `).join('')}
                                 </div>
@@ -1463,7 +1522,7 @@
                                                 <div class="bar" style="height: ${(count / maxSubGenreCount) * 100}%;">
                                                     <div class="bar-count">${count}</div>
                                                 </div>
-                                                <div class="bar-label">${subGenre}</div>
+                                                <div class="bar-label">${this.escapeHtml(subGenre)}</div>
                                             </div>
                                         `).join('')}
                                     </div>
@@ -1534,8 +1593,8 @@
                                     </div>
                                     <div>
                                         <div class="extreme-label">Shortest</div>
-                                        <div class="extreme-title">${shortest.title}</div>
-                                        <div class="extreme-meta">${shortest.author}</div>
+                                        <div class="extreme-title">${this.escapeHtml(shortest.title)}</div>
+                                        <div class="extreme-meta">${this.escapeHtml(shortest.author)}</div>
                                         <div class="extreme-meta">${shortest.pageCount.toLocaleString()} pages</div>
                                     </div>
                                 </div>
@@ -1549,8 +1608,8 @@
                                     </div>
                                     <div>
                                         <div class="extreme-label">Longest</div>
-                                        <div class="extreme-title">${longest.title}</div>
-                                        <div class="extreme-meta">${longest.author}</div>
+                                        <div class="extreme-title">${this.escapeHtml(longest.title)}</div>
+                                        <div class="extreme-meta">${this.escapeHtml(longest.author)}</div>
                                         <div class="extreme-meta">${longest.pageCount.toLocaleString()} pages</div>
                                     </div>
                                 </div>
@@ -1674,6 +1733,9 @@
                 return colors[type] || '#ccc';
             }
 
+            /**
+             * Generate SVG pie chart for book type distribution
+             */
             createPieChart(typeCounts, total) {
                 let currentAngle = 0;
                 const radius = 60;
@@ -1796,7 +1858,7 @@
 
                 const authorYear = [];
                 if (book.author && book.author !== 'Unknown Author') {
-                    authorYear.push(book.author);
+                    authorYear.push(this.escapeHtml(book.author));
                 }
                 if (book.publishedYear) {
                     authorYear.push(`${book.publishedYear}`);
@@ -1815,16 +1877,16 @@
 
                 // Create cover element (either image or placeholder)
                 const coverElement = imageSrc
-                    ? `<img class="book-cover-thumb" src="${imageSrc}" alt="${book.title}" style="height: ${height - 8}px;" data-book-id="${hash}">`
+                    ? `<img class="book-cover-thumb" src="${imageSrc}" alt="${this.escapeHtml(book.title)}" style="height: ${height - 8}px;" data-book-id="${hash}">`
                     : `<div class="book-cover-placeholder" style="height: ${height - 8}px;">
-                         <div>${book.title.substring(0, 30)}${book.title.length > 30 ? '...' : ''}</div>
+                         <div>${this.escapeHtml(book.title.substring(0, 30))}${book.title.length > 30 ? '...' : ''}</div>
                        </div>`;
 
                 bookDiv.innerHTML = `
                     <div class="book-spine" style="background: ${spineBackground}; min-height: ${height}px;" data-book-id="${hash}">
                         ${coverElement}
                         <div class="book-content">
-                            <div class="book-title">${book.title}</div>
+                            <div class="book-title">${this.escapeHtml(book.title)}</div>
                             ${metadata}
                         </div>
                         ${this.getBookTypeIcon(book.type)}
@@ -1860,23 +1922,23 @@
                 }
 
                 const authorWithYear = book.publishedYear
-                    ? `${book.author || 'Unknown Author'} (${book.publishedYear})`
-                    : (book.author || 'Unknown Author');
+                    ? `${this.escapeHtml(book.author || 'Unknown Author')} (${book.publishedYear})`
+                    : this.escapeHtml(book.author || 'Unknown Author');
 
                 // Use cover URL, then placeholder
                 const imageSrc = book.coverUrl;
                 const coverElement = imageSrc
-                    ? `<img class="grid-book-cover" src="${imageSrc}" alt="${book.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    ? `<img class="grid-book-cover" src="${imageSrc}" alt="${this.escapeHtml(book.title)}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                        <div class="grid-book-cover-placeholder" style="display:none;">
-                           <div class="grid-placeholder-text">${book.title.substring(0, 30)}${book.title.length > 30 ? '...' : ''}</div>
+                           <div class="grid-placeholder-text">${this.escapeHtml(book.title.substring(0, 30))}${book.title.length > 30 ? '...' : ''}</div>
                        </div>`
                     : `<div class="grid-book-cover-placeholder">
-                           <div class="grid-placeholder-text">${book.title.substring(0, 30)}${book.title.length > 30 ? '...' : ''}</div>
+                           <div class="grid-placeholder-text">${this.escapeHtml(book.title.substring(0, 30))}${book.title.length > 30 ? '...' : ''}</div>
                        </div>`;
 
                 cardDiv.innerHTML = `
                     ${coverElement}
-                    <div class="grid-book-title">${book.title}</div>
+                    <div class="grid-book-title">${this.escapeHtml(book.title)}</div>
                     <div class="grid-book-author">${authorWithYear}</div>
                 `;
 
@@ -1894,8 +1956,8 @@
                 modal.classList.add('active');
 
                 header.innerHTML = `
-                    <h2>${book.title}</h2>
-                    <p class="author">${book.author}</p>
+                    <h2>${this.escapeHtml(book.title)}</h2>
+                    <p class="author">${this.escapeHtml(book.author)}</p>
                 `;
 
                 body.innerHTML = '<div class="loading">Loading book details...</div>';
@@ -1919,7 +1981,7 @@
 
                 body.innerHTML = `
                     <div class="book-detail-grid">
-                        <img src="${imageSrc}" alt="${book.title}" class="book-cover-large">
+                        <img src="${imageSrc}" alt="${this.escapeHtml(book.title)}" class="book-cover-large">
                         <div class="book-info-column">
                             <div class="book-meta">
                                 ${book.publishedYear ? `
@@ -1931,19 +1993,19 @@
                                 ${book.yearRead ? `
                                     <div class="meta-item">
                                         <span class="meta-label">Read In</span>
-                                        <span class="meta-value">${book.yearRead}</span>
+                                        <span class="meta-value">${this.escapeHtml(book.yearRead)}</span>
                                     </div>
                                 ` : ''}
                                 ${book.genre ? `
                                     <div class="meta-item">
                                         <span class="meta-label">Genre</span>
-                                        <span class="meta-value">${book.genre}</span>
+                                        <span class="meta-value">${this.escapeHtml(book.genre)}</span>
                                     </div>
                                 ` : ''}
                                 ${book.subGenre ? `
                                     <div class="meta-item">
                                         <span class="meta-label">Sub-Genre</span>
-                                        <span class="meta-value">${book.subGenre}</span>
+                                        <span class="meta-value">${this.escapeHtml(book.subGenre)}</span>
                                     </div>
                                 ` : ''}
                                 ${book.pageCount ? `
@@ -1955,7 +2017,7 @@
                                 ${book.type ? `
                                     <div class="meta-item">
                                         <span class="meta-label">Format</span>
-                                        <span class="meta-value">${book.type}</span>
+                                        <span class="meta-value">${this.escapeHtml(book.type)}</span>
                                     </div>
                                 ` : ''}
                                 ${book.rating ? `
@@ -1969,7 +2031,7 @@
                             ${book.thoughts ? `
                                 <div class="book-thoughts">
                                     <h3 class="thoughts-title">My Thoughts</h3>
-                                    <p class="thoughts-content">${book.thoughts}</p>
+                                    <p class="thoughts-content">${this.escapeHtml(book.thoughts)}</p>
                                 </div>
                             ` : ''}
                         </div>

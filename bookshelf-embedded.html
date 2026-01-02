@@ -277,7 +277,7 @@
         align-items: flex-end;
         gap: 8px;
         height: 200px;
-        padding-bottom: 60px;
+        padding-bottom: 80px;
         position: relative;
     }
 
@@ -315,12 +315,14 @@
         bottom: -50px;
         left: 50%;
         transform: translateX(-50%) rotate(-45deg);
-        transform-origin: center;
+        transform-origin: left center;
         font-size: 0.7rem;
         font-weight: 600;
         color: #1a1a1a;
         white-space: nowrap;
-        text-align: left;
+        max-width: 120px;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .ibs-bar-count {
@@ -839,6 +841,10 @@
             max-width: 200px;
             margin: 0 auto;
         }
+        .ibs-metrics-counts {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
         .ibs-chart-container {
             grid-template-columns: 1fr;
         }
@@ -846,11 +852,20 @@
             padding: 24px 16px;
         }
         .ibs-metric-value {
-            font-size: 2.5rem;
+            font-size: 1.75rem;
         }
         .ibs-extremes-grid {
             grid-template-columns: 1fr;
             gap: 32px;
+        }
+        .ibs-bookshelf-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            padding: 16px;
+        }
+        .ibs-grid-book-cover,
+        .ibs-grid-book-cover-placeholder {
+            height: 180px;
         }
     }
 </style>
@@ -956,8 +971,7 @@
                     pageCount: parseInt(values[8]) || 250,
                     rating: values[9] || '',
                     thoughts: values[10] || '',
-                    coverUrl: values[11] || '', // Fallback URL from Apps Script
-                    coverBase64: values[12] || '', // Preferred base64 from Apps Script
+                    coverUrl: values[11] || '',
                     spineGradient: this.generateSpineGradient(values[1] + (values[2] || ''))
                 };
 
@@ -996,7 +1010,7 @@
 
         async enrichBookDataForModal(book) {
             // Only called when opening modal - fetches cover image on-demand
-            if (book.coverUrl || book.coverBase64) return; // Already have cover data
+            if (book.coverUrl) return; // Already have cover data
 
             try {
                 const searchUrl = `https://openlibrary.org/search.json?title=${encodeURIComponent(book.title)}&author=${encodeURIComponent(book.author)}&limit=1`;
@@ -1406,22 +1420,10 @@
                             `).join('')}
                         </div>
                     ` : ''}
-                    ${recommendedBooks.length > 0 ? `
-                        <div class="ibs-chart" style="grid-column: 1 / -1;">
-                            <div class="ibs-chart-title">Recommended Reads</div>
-                            <div class="ibs-recommended-list">
-                                ${recommendedBooks.slice(0, 5).map(book => `
-                                    <div class="ibs-recommended-item">
-                                        <div>
-                                            <div class="ibs-recommended-title">${book.title}</div>
-                                            <div class="ibs-recommended-author">${book.author}</div>
-                                        </div>
-                                    </div>
-                                `).join('')}
-                                ${recommendedBooks.length > 5 ? `<div class="ibs-extreme-meta" style="padding: 8px 16px;">...and ${recommendedBooks.length - 5} more</div>` : ''}
-                            </div>
-                        </div>
-                    ` : ''}
+                    <div class="ibs-metric-card" style="grid-column: 1 / -1;">
+                        <div class="ibs-metric-label">Recommended Books</div>
+                        <div class="ibs-metric-value">${recommendedCount}</div>
+                    </div>
                 </div>
             `;
         }
@@ -1571,8 +1573,8 @@
             bookDiv.style.setProperty('--offset', `${offsetPercent}%`);
             bookDiv.style.transform = `translateX(${offsetPercent}%)`;
 
-            // Prefer base64, fall back to URL
-            const imageSrc = book.coverBase64 || book.coverUrl;
+            // Use cover URL
+            const imageSrc = book.coverUrl;
 
             // Determine spine background (will be updated with gradient later if cover exists)
             const spineBackground = imageSrc ? book.spineGradient : '#d3d3d3';
@@ -1627,8 +1629,8 @@
                 ? `${book.author || 'Unknown Author'} (${book.publishedYear})`
                 : (book.author || 'Unknown Author');
 
-            // Prefer base64, fall back to URL, then placeholder
-            const imageSrc = book.coverBase64 || book.coverUrl;
+            // Use cover URL, then placeholder
+            const imageSrc = book.coverUrl;
             const coverElement = imageSrc
                 ? `<img class="ibs-grid-book-cover" src="${imageSrc}" alt="${book.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                    <div class="ibs-grid-book-cover-placeholder" style="display:none;">
@@ -1667,8 +1669,8 @@
             // Fetch cover image on-demand
             await this.enrichBookDataForModal(book);
 
-            // Prefer base64, fall back to URL
-            const imageSrc = book.coverBase64 || book.coverUrl;
+            // Use cover URL
+            const imageSrc = book.coverUrl;
 
             // Extract colors for modal header
             if (imageSrc) {

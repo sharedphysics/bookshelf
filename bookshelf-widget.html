@@ -30,7 +30,7 @@
         }
 
         .bookshelf-container {
-            max-width: 1400px;
+            max-width: 800px;
             margin: 0 auto;
         }
 
@@ -48,39 +48,96 @@
         }
 
         .metrics-title {
-            font-size: 0.75rem;
+            font-size: 1.125rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.1em;
             color: #666;
             text-align: center;
-            margin-bottom: 24px;
         }
 
-        .view-toggle {
+        .library-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #666;
+            text-align: center;
+            margin: 32px 0 24px;
+        }
+
+        .library-controls {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 16px;
+            max-width: 1200px;
+            margin: 0 auto 32px;
+            padding: 0 20px;
+        }
+
+        .control-group {
             display: flex;
+            flex-direction: column;
             gap: 8px;
-            justify-content: center;
-            margin: 24px 0 16px;
         }
 
-        .view-btn {
-            padding: 8px 16px;
+        .control-label {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #666;
+        }
+
+        .toggle-group {
+            display: flex;
+            gap: 4px;
             border: 1px solid #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .toggle-btn {
+            flex: 1;
+            padding: 10px 16px;
+            border: none;
             background: #fff;
             cursor: pointer;
             font-size: 0.85rem;
             font-weight: 600;
             transition: all 0.2s;
+            font-family: inherit;
+            color: #1a1a1a;
+            text-decoration: none;
         }
 
-        .view-btn:hover {
+        .toggle-btn:hover {
             background: #f5f5f5;
         }
 
-        .view-btn.active {
+        .toggle-btn.active {
             background: #1a1a1a;
             color: #fff;
+        }
+
+        .control-select {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-family: inherit;
+            transition: all 0.2s;
+        }
+
+        .control-select:hover {
+            border-color: #999;
+        }
+
+        .control-select:focus {
+            outline: none;
             border-color: #1a1a1a;
         }
 
@@ -108,7 +165,7 @@
         .grid-book-cover {
             width: 100%;
             max-width: 180px;
-            height: 240px;
+            height: 235px;
             object-fit: contain;
             border: 1px solid #ddd;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -117,7 +174,7 @@
         .grid-book-cover-placeholder {
             width: 100%;
             max-width: 180px;
-            height: 240px;
+            height: 235px;
             background: #d3d3d3;
             border: 1px solid #ddd;
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
@@ -167,9 +224,18 @@
             opacity: 0.5;
         }
 
+        .metrics-counts {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 32px;
+            margin-bottom: 32px;
+            position: relative;
+            z-index: 1;
+        }
+
         .metrics-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            grid-template-columns: 1fr;
             gap: 32px;
             position: relative;
             z-index: 1;
@@ -190,7 +256,7 @@
         }
 
         .metric-value {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 900;
             line-height: 1;
             color: #1a1a1a;
@@ -198,7 +264,6 @@
         }
 
         .chart-container {
-            grid-column: 1 / -1;
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 48px;
@@ -224,7 +289,7 @@
             align-items: flex-end;
             gap: 8px;
             height: 200px;
-            padding-bottom: 60px;
+            padding-bottom: 80px;
             position: relative;
         }
 
@@ -262,12 +327,14 @@
             bottom: -50px;
             left: 50%;
             transform: translateX(-50%) rotate(-45deg);
-            transform-origin: center;
+            transform-origin: left center;
             font-size: 0.7rem;
             font-weight: 600;
             color: #1a1a1a;
             white-space: nowrap;
-            text-align: left;
+            max-width: 120px;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .bar-count {
@@ -425,7 +492,47 @@
             color: #666;
         }
 
+        .pie-chart-container {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            align-items: center;
+        }
+
+        .pie-legend {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .pie-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        .pie-legend-color {
+            width: 16px;
+            height: 16px;
+            border-radius: 2px;
+        }
+
+        .footer {
+            text-align: center;
+            font-size: 0.75rem;
+            color: #999;
+            margin-top: 48px;
+            padding: 24px 0;
+            border-top: 1px solid #e0e0e0;
+        }
+
         @media (max-width: 768px) {
+            .metrics-counts {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+            }
+
             .chart-container {
                 grid-template-columns: 1fr;
             }
@@ -435,46 +542,29 @@
             }
 
             .metric-value {
-                font-size: 2.5rem;
+                font-size: 1.75rem;
             }
 
             .extremes-grid {
                 grid-template-columns: 1fr;
                 gap: 32px;
             }
-        }
 
-        .filters {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
-            margin-bottom: 32px;
-        }
+            .library-controls {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
 
-        .filter-btn {
-            padding: 8px 16px;
-            background: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 6px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            color: #666;
-        }
+            .bookshelf-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 16px;
+                padding: 16px;
+            }
 
-        .filter-btn:hover {
-            background: #f5f5f5;
-            border-color: #ccc;
-            color: #1a1a1a;
-        }
-
-        .filter-btn.active {
-            background: #1a1a1a;
-            color: white;
-            border-color: #1a1a1a;
+            .grid-book-cover,
+            .grid-book-cover-placeholder {
+                height: 180px;
+            }
         }
 
         .loading {
@@ -830,21 +920,44 @@
     <div class="bookshelf-container">
         <div class="bookshelf-header">
             <h1>My Library</h1>
-            <div class="metrics-title">Reading in Review</div>
+            <div class="metrics-title">Reading in Data</div>
             <div id="metrics" class="metrics-section"></div>
         </div>
 
-        <div class="filters">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="recommended">Recommended</button>
-        </div>
+        <div class="library-title">The Library</div>
 
-        <div class="view-toggle">
-            <button class="view-btn" data-view="stack">Stack</button>
-            <button class="view-btn active" data-view="grid">Grid</button>
+        <div class="library-controls">
+            <div class="control-group">
+                <label class="control-label">Filter</label>
+                <div class="toggle-group">
+                    <button class="toggle-btn active" data-filter="all">All</button>
+                    <button class="toggle-btn" data-filter="recommended">Recommended</button>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">View</label>
+                <div class="toggle-group">
+                    <button class="toggle-btn" data-view="stack">Stack</button>
+                    <button class="toggle-btn active" data-view="grid">Grid</button>
+                </div>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Year Read</label>
+                <select id="yearFilter" class="control-select">
+                    <option value="">All Years</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <label class="control-label">Genre</label>
+                <select id="genreFilter" class="control-select">
+                    <option value="">All Genres</option>
+                </select>
+            </div>
         </div>
 
         <div id="bookshelf" class="loading">Loading your bookshelf...</div>
+
+        <div class="footer">Created with 'Bookshelf' by Recommended.Systems</div>
     </div>
 
     <div class="modal" id="bookModal">
@@ -887,7 +1000,7 @@
                     const url = CONFIG.publishedUrl;
                     const response = await fetch(url);
                     const csvText = await response.text();
-                    
+
                     this.books = await this.parseCSV(csvText);
                     this.filteredBooks = [...this.books];
                 } catch (error) {
@@ -918,8 +1031,7 @@
                         pageCount: parseInt(values[8]) || 250,
                         rating: values[9] || '',
                         thoughts: values[10] || '',
-                        coverUrl: values[11] || '', // Fallback URL from Apps Script
-                        coverBase64: values[12] || '', // Preferred base64 from Apps Script
+                        coverUrl: values[11] || '',
                         spineGradient: this.generateSpineGradient(values[1] + (values[2] || ''))
                     };
 
@@ -958,7 +1070,7 @@
 
             async enrichBookDataForModal(book) {
                 // Only called when opening modal - fetches cover image on-demand
-                if (book.coverUrl || book.coverBase64) return; // Already have cover data
+                if (book.coverUrl) return; // Already have cover data
 
                 try {
                     const searchUrl = `https://openlibrary.org/search.json?title=${encodeURIComponent(book.title)}&author=${encodeURIComponent(book.author)}&limit=1`;
@@ -1118,14 +1230,38 @@
             }
 
             setupEventListeners() {
-                // Filter buttons
-                document.querySelectorAll('.filter-btn').forEach(btn => {
+                // Filter toggle buttons
+                document.querySelectorAll('[data-filter]').forEach(btn => {
                     btn.addEventListener('click', (e) => {
-                        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                        const group = e.target.closest('.toggle-group');
+                        group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
                         e.target.classList.add('active');
                         this.currentFilter = e.target.dataset.filter;
                         this.applyFilters();
                     });
+                });
+
+                // View toggle buttons
+                document.querySelectorAll('[data-view]').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const group = e.target.closest('.toggle-group');
+                        group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+                        e.target.classList.add('active');
+                        this.currentView = e.target.dataset.view;
+                        this.renderBookshelf();
+                    });
+                });
+
+                // Year filter dropdown
+                document.getElementById('yearFilter').addEventListener('change', (e) => {
+                    this.currentYear = e.target.value;
+                    this.applyFilters();
+                });
+
+                // Genre filter dropdown
+                document.getElementById('genreFilter').addEventListener('change', (e) => {
+                    this.currentGenre = e.target.value;
+                    this.applyFilters();
                 });
 
                 // Modal
@@ -1138,21 +1274,28 @@
                         document.getElementById('bookModal').classList.remove('active');
                     }
                 });
-
-                // View toggle
-                document.querySelectorAll('.view-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const view = e.target.dataset.view;
-                        document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
-                        e.target.classList.add('active');
-                        this.currentView = view;
-                        this.renderBookshelf();
-                    });
-                });
             }
 
             populateFilters() {
-                // Simplified - no dropdowns
+                // Populate year dropdown
+                const years = [...new Set(this.books.map(b => b.yearRead).filter(y => y))].sort().reverse();
+                const yearSelect = document.getElementById('yearFilter');
+                years.forEach(year => {
+                    const option = document.createElement('option');
+                    option.value = year;
+                    option.textContent = year;
+                    yearSelect.appendChild(option);
+                });
+
+                // Populate genre dropdown
+                const genres = [...new Set(this.books.map(b => b.genre).filter(g => g))].sort();
+                const genreSelect = document.getElementById('genreFilter');
+                genres.forEach(genre => {
+                    const option = document.createElement('option');
+                    option.value = genre;
+                    option.textContent = genre;
+                    genreSelect.appendChild(option);
+                });
             }
 
             applyFilters() {
@@ -1206,6 +1349,35 @@
                     .sort((a, b) => b[1] - a[1])
                     .slice(0, 8);
 
+                // Count subgenres
+                const subGenreCounts = {};
+                this.books.forEach(book => {
+                    if (book.subGenre && book.subGenre.trim()) {
+                        const subGenre = book.subGenre;
+                        subGenreCounts[subGenre] = (subGenreCounts[subGenre] || 0) + 1;
+                    }
+                });
+
+                // Sort subgenres by count and take top 8
+                const topSubGenres = Object.entries(subGenreCounts)
+                    .sort((a, b) => b[1] - a[1])
+                    .slice(0, 8);
+
+                // Count by type (digital, print, audio)
+                const typeCounts = {};
+                this.books.forEach(book => {
+                    const type = (book.type || 'Print').toLowerCase();
+                    let category;
+                    if (type.includes('digital') || type.includes('ebook')) {
+                        category = 'Digital';
+                    } else if (type.includes('audio')) {
+                        category = 'Audio';
+                    } else {
+                        category = 'Print';
+                    }
+                    typeCounts[category] = (typeCounts[category] || 0) + 1;
+                });
+
                 // Count by decade
                 const decadeCounts = {};
                 this.books.forEach(book => {
@@ -1244,17 +1416,18 @@
 
                 const metricsContainer = document.getElementById('metrics');
                 const maxGenreCount = Math.max(...topGenres.map(g => g[1]));
+                const maxSubGenreCount = topSubGenres.length > 0 ? Math.max(...topSubGenres.map(g => g[1])) : 1;
                 const maxDecadeCount = Math.max(...decades.map(d => d[1]));
                 const maxYearCount = yearsRead.length > 0 ? Math.max(...yearsRead.map(y => y[1])) : 1;
 
                 metricsContainer.innerHTML = `
-                    <div class="metrics-grid">
+                    <div class="metrics-counts">
                         <div class="metric-card">
                             <div class="metric-label">Total Books</div>
                             <div class="metric-value">${totalBooks}</div>
                         </div>
                         <div class="metric-card">
-                            <div class="metric-label">Total Pages</div>
+                            <div class="metric-label">Total Pages Read</div>
                             <div class="metric-value">${totalPages.toLocaleString()}</div>
                         </div>
                         <div class="metric-card">
@@ -1265,6 +1438,8 @@
                             <div class="metric-label">Avg Book Age</div>
                             <div class="metric-value">${avgAge}yr</div>
                         </div>
+                    </div>
+                    <div class="metrics-grid">
                         <div class="chart-container">
                             <div class="chart">
                                 <div class="chart-title">By Genre</div>
@@ -1279,6 +1454,39 @@
                                     `).join('')}
                                 </div>
                             </div>
+                            ${topSubGenres.length > 0 ? `
+                                <div class="chart">
+                                    <div class="chart-title">By Sub-Genre</div>
+                                    <div class="bar-chart">
+                                        ${topSubGenres.map(([subGenre, count]) => `
+                                            <div class="bar-wrapper">
+                                                <div class="bar" style="height: ${(count / maxSubGenreCount) * 100}%;">
+                                                    <div class="bar-count">${count}</div>
+                                                </div>
+                                                <div class="bar-label">${subGenre}</div>
+                                            </div>
+                                        `).join('')}
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                        <div class="chart-container">
+                            ${Object.keys(typeCounts).length > 0 ? `
+                                <div class="chart">
+                                    <div class="chart-title">By Type</div>
+                                    <div class="pie-chart-container">
+                                        ${this.createPieChart(typeCounts, totalBooks)}
+                                        <div class="pie-legend">
+                                            ${Object.entries(typeCounts).map(([type, count]) => `
+                                                <div class="pie-legend-item">
+                                                    <div class="pie-legend-color" style="background: ${this.getTypeColor(type)};"></div>
+                                                    <div>${type}: ${count}</div>
+                                                </div>
+                                            `).join('')}
+                                        </div>
+                                    </div>
+                                </div>
+                            ` : ''}
                             <div class="chart">
                                 <div class="chart-title">By Decade Published</div>
                                 <div class="bar-chart">
@@ -1348,22 +1556,10 @@
                                 </div>
                             </div>
                         ` : ''}
-                        ${recommendedBooks.length > 0 ? `
-                            <div class="chart" style="grid-column: 1 / -1;">
-                                <div class="chart-title">Recommended Reads</div>
-                                <div class="recommended-list">
-                                    ${recommendedBooks.slice(0, 5).map(book => `
-                                        <div class="recommended-item">
-                                            <div>
-                                                <div class="recommended-title">${book.title}</div>
-                                                <div class="recommended-author">${book.author}</div>
-                                            </div>
-                                        </div>
-                                    `).join('')}
-                                    ${recommendedBooks.length > 5 ? `<div class="extreme-meta" style="padding: 8px 16px;">...and ${recommendedBooks.length - 5} more</div>` : ''}
-                                </div>
-                            </div>
-                        ` : ''}
+                        <div class="metric-card" style="grid-column: 1 / -1;">
+                            <div class="metric-label">Recommended Books</div>
+                            <div class="metric-value">${recommendedCount}</div>
+                        </div>
                     </div>
                 `;
 
@@ -1469,6 +1665,47 @@
                 });
             }
 
+            getTypeColor(type) {
+                const colors = {
+                    'Print': '#1a1a1a',
+                    'Digital': '#666',
+                    'Audio': '#999'
+                };
+                return colors[type] || '#ccc';
+            }
+
+            createPieChart(typeCounts, total) {
+                let currentAngle = 0;
+                const radius = 60;
+                const cx = 70;
+                const cy = 70;
+
+                const slices = Object.entries(typeCounts).map(([type, count]) => {
+                    const percentage = count / total;
+                    const angle = percentage * 360;
+                    const startAngle = currentAngle;
+                    const endAngle = currentAngle + angle;
+                    currentAngle = endAngle;
+
+                    const startRad = (startAngle - 90) * Math.PI / 180;
+                    const endRad = (endAngle - 90) * Math.PI / 180;
+
+                    const x1 = cx + radius * Math.cos(startRad);
+                    const y1 = cy + radius * Math.sin(startRad);
+                    const x2 = cx + radius * Math.cos(endRad);
+                    const y2 = cy + radius * Math.sin(endRad);
+
+                    const largeArc = angle > 180 ? 1 : 0;
+
+                    return `<path d="M ${cx} ${cy} L ${x1} ${y1} A ${radius} ${radius} 0 ${largeArc} 1 ${x2} ${y2} Z"
+                            fill="${this.getTypeColor(type)}"
+                            stroke="#fff"
+                            stroke-width="2"/>`;
+                }).join('');
+
+                return `<svg viewBox="0 0 140 140" style="width: 140px; height: 140px;">${slices}</svg>`;
+            }
+
             renderBookshelf() {
                 const container = document.getElementById('bookshelf');
 
@@ -1570,8 +1807,8 @@
                 bookDiv.style.setProperty('--offset', `${offsetPercent}%`);
                 bookDiv.style.transform = `translateX(${offsetPercent}%)`;
 
-                // Prefer base64, fall back to URL
-                const imageSrc = book.coverBase64 || book.coverUrl;
+                // Use cover URL
+                const imageSrc = book.coverUrl;
 
                 // Determine spine background (will be updated with gradient later if cover exists)
                 const spineBackground = imageSrc ? book.spineGradient : '#d3d3d3';
@@ -1626,8 +1863,8 @@
                     ? `${book.author || 'Unknown Author'} (${book.publishedYear})`
                     : (book.author || 'Unknown Author');
 
-                // Prefer base64, fall back to URL, then placeholder
-                const imageSrc = book.coverBase64 || book.coverUrl;
+                // Use cover URL, then placeholder
+                const imageSrc = book.coverUrl;
                 const coverElement = imageSrc
                     ? `<img class="grid-book-cover" src="${imageSrc}" alt="${book.title}" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
                        <div class="grid-book-cover-placeholder" style="display:none;">
@@ -1666,8 +1903,8 @@
                 // Fetch cover image on-demand
                 await this.enrichBookDataForModal(book);
 
-                // Prefer base64, fall back to URL
-                const imageSrc = book.coverBase64 || book.coverUrl;
+                // Use cover URL
+                const imageSrc = book.coverUrl;
 
                 // Extract colors for modal header
                 if (imageSrc) {
